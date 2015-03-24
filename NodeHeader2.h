@@ -3,42 +3,47 @@ typedef enum  { Symbol,Constant,Operation,Block } NodeType;
 
 class Node
 {
+            public:
             NodeType type;
             Node *left,*right;
             virtual int Process() =0;
 };
 
 class ConstantNode: public Node
-            {
+            {                              
+                  public:
                   int value;
                   int Process();
-                  //~ ConstantNode(int v)
-                  //~ { value = v;}
+                  ConstantNode(int v)
+                  { value = v;}
             };      
 
 class SymbolNode: public Node
             {
+                  public:
                   char Index;
-                  //~ SymbolNode( char i )
-                  //~ { Index = i;}
+                  SymbolNode( char i )
+                  { Index = i;}
                   int Process();
             };
                   
 class OperationNode:public Node 
             {
+                  public:
                   int operation;
                   int Process();
-                  //~ OperationNode(int opr,Node *l,Node *r) 
-                  //~ { 
-                        //~ operation = opr;
-                        //~ left = l;right = r;
-                  //~ }    
-                  //~ Node *left,*right;
+                  OperationNode(int opr,Node *l,Node *r) 
+                  { 
+                        operation = opr;
+                        left = l;right = r;
+                  }    
             };      
 
 class BlockNode:public Node
             {
+                  public:
                   int size;
+                  BlockNode() { size = 0;}
                   int Process();
                   Node *Array[100];
                   void Add(Node *n)
@@ -49,27 +54,26 @@ class BlockNode:public Node
             
 Node *Create(Node *left,Node *right,int operation);
 Node *Create(int value);
-/*
-int ProcessNode(Node *node);
-int ProcessConstantNode(ConstantNode *cn);
-int ProcessSymbolNode(SymbolNode *sn);
-int ProcessOperationNode(OperationNode *on);
-int ProcessBlockNode(BlockNode *bn);
-*/
+
 struct Stack
             {
-                  
-                  Node *B[100];
+                  public:
+                  BlockNode *B[100];
                   int size;
-                  //~ void Push()
-                  //~ {
-                        //~ size++;
-                  //~ }
-                  //~ Node* Pop()
-                  //~ {
-                        //~ return B[size--];
-                  //~ }
-                  
-            }St;
+                  Stack() { size = 0;}
+                  void Push()
+                  {
+                        B[size++] = new BlockNode();
+                  }
+                  Node* Pop()
+                  {
+                        size--;
+                        return B[size];
+                  }  
+                  void Add(Node *n)
+                  {
+                        B[size-1]->Add(n);
+                  }                
+            };
 
 extern int symbolTable[50];

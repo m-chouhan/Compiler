@@ -10,12 +10,13 @@
 	using namespace std;
 	int symbolTable[50];
 	int id;
+	Stack St;
 %}
 
 %union{
 	int ivalue;
 	char sindex;
-	struct Node *nptr;
+	class Node *nptr;
 }
 
 %token <ivalue> INTEGER
@@ -38,17 +39,20 @@ start:
 	;
 block:
 	bopen statements bclose	 	{ 
+						$$ = St.Pop();
 						printf("{}->"); 
 					}
 	;
 bopen:
 	'{'				{
+						St.Push();
 						id = 0;
 						printf("{ ...");
 					}
 	;
 bclose:
 	'}'				{
+						
 						//id = pop_id();
 						printf("....}->");
 					}
@@ -58,12 +62,22 @@ statements:
 		|
 		;
 statement:
-		expr ';'		{ $$ = $1;
-					  //printf("Exp:ID:%d\t val:%d\n",id++,$1); 	    
+		expr ';'		{ 
+						$$ = $1;
+					 	St.Add($1);
+					  	//printf("Exp:ID:%d\t val:%d\n",id++,$1); 	    
 					}	
 		|';'
-		|IF expr block		{ printf("IF{}\n");}
-		|IF expr block ELSE block	{ printf("IF{}ELSE{}\n");}
+		|IF expr block		{ 
+						$$ = Create($2,$3,IF);
+						//printf("IF{}\n");
+						
+					}
+		|IF expr block ELSE block	{
+							Node *ptr = Create($3,$5,ELSE);
+							$$ = Create($2,ptr,IF); 
+							printf("IF{}ELSE{}\n");
+						}
 
 		|WHILE expr block	{ printf("WHILE{}\n");}
 

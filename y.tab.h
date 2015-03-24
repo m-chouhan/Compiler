@@ -73,11 +73,11 @@ typedef union YYSTYPE
 {
 
 /* Line 2068 of yacc.c  */
-#line 15 "yaccFile.y"
+#line 16 "yaccFile.y"
 
 	int ivalue;
 	char sindex;
-	struct Node *nptr;
+	class Node *nptr;
 
 
 
