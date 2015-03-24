@@ -79,37 +79,38 @@ statement:
 							printf("IF{}ELSE{}\n");
 						}
 
-		|WHILE expr block	{ printf("WHILE{}\n");}
+		|WHILE expr block	{ 
+						$$ = Create($2,$3,WHILE);
+						printf("WHILE{}\n");
+					}
 
 		|DECLARE ALPHA ';' 	{
 			 			symbolTable[$2] = 0; 
-						//$$ = symbolTable[$2];
+						$$ = Create($2,ALPHA);//change to Declare() alpha
 					}
 		;
 expr:
 	INTEGER				{ 
-						//$$ = $1;		
+						$$ = Create($1,INTEGER);		
 					}
-	|FLOAT
 	|ALPHA				{ 
-						//$$ = symbolTable[$1]; 
+						$$ = Create($1,ALPHA);
 					}
 	|'(' expr ')'			{ 	$$ = $2;	}
 	| expr '+' expr			{ 
-						//$$ = $1+$3;		
+						$$ = Create($1,$3,'+');		
 					}
 	| expr '-' expr			{ 
-						//$$ = $1-$3;		
+						$$ = Create($1,$3,'-');		
 					}
 	| expr '*' expr			{ 
-						//$$ = $1*$3;		
+						$$ = Create($1,$3,'*');		
 					}
 	| expr '/' expr			{ 
-						//$$ = $1/$3;		
+						$$ = Create($1,$3,'/');		
 					}
 	|ALPHA '=' expr 		{
-						//symbolTable[$1] = $3;
-						//$$ = symbolTable[$1];
+						$$ = Create($1,$3,'=');		
 					}
 	;
 

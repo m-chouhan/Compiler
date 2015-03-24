@@ -53,7 +53,7 @@ class BlockNode:public Node
             };
             
 Node *Create(Node *left,Node *right,int operation);
-Node *Create(int value);
+Node *Create(int value,int type);
 
 struct Stack
             {
