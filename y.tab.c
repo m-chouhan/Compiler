@@ -68,18 +68,21 @@
 /* Line 268 of yacc.c  */
 #line 1 "yaccFile.y"
 
+	#include <iostream>
 	#include <stdio.h>
+	#include <vector>
 	#include "NodeHeader.h"
 	extern int yylineno;
 	extern int yylex(void);
 	extern void yyerror(char *);
 
+	using namespace std;
 	int symbolTable[50];
 	int id;
 
 
 /* Line 268 of yacc.c  */
-#line 83 "y.tab.c"
+#line 86 "y.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -142,16 +145,16 @@ typedef union YYSTYPE
 {
 
 /* Line 293 of yacc.c  */
-#line 12 "yaccFile.y"
+#line 15 "yaccFile.y"
 
 	int ivalue;
 	char sindex;
-	Node *nptr;
+	struct Node *nptr;
 
 
 
 /* Line 293 of yacc.c  */
-#line 155 "y.tab.c"
+#line 158 "y.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -163,7 +166,7 @@ typedef union YYSTYPE
 
 
 /* Line 343 of yacc.c  */
-#line 167 "y.tab.c"
+#line 170 "y.tab.c"
 
 #ifdef short
 # undef short
@@ -457,9 +460,9 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    40,    40,    43,    48,    54,    60,    61,    64,    67,
-      68,    69,    71,    73,    79,    80,    81,    82,    83,    84,
-      85,    86,    87
+       0,    37,    37,    40,    45,    51,    57,    58,    61,    64,
+      65,    66,    68,    70,    76,    79,    80,    83,    84,    87,
+      90,    93,    96
 };
 #endif
 
@@ -1410,7 +1413,7 @@ yyreduce:
         case 3:
 
 /* Line 1806 of yacc.c  */
-#line 43 "yaccFile.y"
+#line 40 "yaccFile.y"
     { 
 						printf("{}->"); 
 					}
@@ -1419,7 +1422,7 @@ yyreduce:
   case 4:
 
 /* Line 1806 of yacc.c  */
-#line 48 "yaccFile.y"
+#line 45 "yaccFile.y"
     {
 						id = 0;
 						printf("{ ...");
@@ -1429,54 +1432,47 @@ yyreduce:
   case 5:
 
 /* Line 1806 of yacc.c  */
-#line 54 "yaccFile.y"
+#line 51 "yaccFile.y"
     {
 						//id = pop_id();
 						printf("....}->");
 					}
     break;
 
-  case 6:
-
-/* Line 1806 of yacc.c  */
-#line 60 "yaccFile.y"
-    {  }
-    break;
-
   case 8:
 
 /* Line 1806 of yacc.c  */
-#line 64 "yaccFile.y"
+#line 61 "yaccFile.y"
     { (yyval.nptr) = (yyvsp[(1) - (2)].nptr);
-					  printf("Exp:ID:%d\t val:%d\n",id++,(yyvsp[(1) - (2)].nptr)); 	    
+					  //printf("Exp:ID:%d\t val:%d\n",id++,$1); 	    
 					}
     break;
 
   case 10:
 
 /* Line 1806 of yacc.c  */
-#line 68 "yaccFile.y"
+#line 65 "yaccFile.y"
     { printf("IF{}\n");}
     break;
 
   case 11:
 
 /* Line 1806 of yacc.c  */
-#line 69 "yaccFile.y"
+#line 66 "yaccFile.y"
     { printf("IF{}ELSE{}\n");}
     break;
 
   case 12:
 
 /* Line 1806 of yacc.c  */
-#line 71 "yaccFile.y"
+#line 68 "yaccFile.y"
     { printf("WHILE{}\n");}
     break;
 
   case 13:
 
 /* Line 1806 of yacc.c  */
-#line 73 "yaccFile.y"
+#line 70 "yaccFile.y"
     {
 			 			symbolTable[(yyvsp[(2) - (3)].sindex)] = 0; 
 						//$$ = symbolTable[$2];
@@ -1486,66 +1482,78 @@ yyreduce:
   case 14:
 
 /* Line 1806 of yacc.c  */
-#line 79 "yaccFile.y"
-    { (yyval.nptr) = (yyvsp[(1) - (1)].ivalue);		}
+#line 76 "yaccFile.y"
+    { 
+						//$$ = $1;		
+					}
     break;
 
   case 16:
 
 /* Line 1806 of yacc.c  */
-#line 81 "yaccFile.y"
-    { (yyval.nptr) = symbolTable[(yyvsp[(1) - (1)].sindex)]; }
+#line 80 "yaccFile.y"
+    { 
+						//$$ = symbolTable[$1]; 
+					}
     break;
 
   case 17:
 
 /* Line 1806 of yacc.c  */
-#line 82 "yaccFile.y"
-    { (yyval.nptr) = (yyvsp[(2) - (3)].nptr);		}
+#line 83 "yaccFile.y"
+    { 	(yyval.nptr) = (yyvsp[(2) - (3)].nptr);	}
     break;
 
   case 18:
 
 /* Line 1806 of yacc.c  */
-#line 83 "yaccFile.y"
-    { (yyval.nptr) = (yyvsp[(1) - (3)].nptr)+(yyvsp[(3) - (3)].nptr);		}
+#line 84 "yaccFile.y"
+    { 
+						//$$ = $1+$3;		
+					}
     break;
 
   case 19:
 
 /* Line 1806 of yacc.c  */
-#line 84 "yaccFile.y"
-    { (yyval.nptr) = (yyvsp[(1) - (3)].nptr)-(yyvsp[(3) - (3)].nptr);		}
+#line 87 "yaccFile.y"
+    { 
+						//$$ = $1-$3;		
+					}
     break;
 
   case 20:
 
 /* Line 1806 of yacc.c  */
-#line 85 "yaccFile.y"
-    { (yyval.nptr) = (yyvsp[(1) - (3)].nptr)*(yyvsp[(3) - (3)].nptr);		}
+#line 90 "yaccFile.y"
+    { 
+						//$$ = $1*$3;		
+					}
     break;
 
   case 21:
 
 /* Line 1806 of yacc.c  */
-#line 86 "yaccFile.y"
-    { (yyval.nptr) = (yyvsp[(1) - (3)].nptr)/(yyvsp[(3) - (3)].nptr);		}
+#line 93 "yaccFile.y"
+    { 
+						//$$ = $1/$3;		
+					}
     break;
 
   case 22:
 
 /* Line 1806 of yacc.c  */
-#line 87 "yaccFile.y"
+#line 96 "yaccFile.y"
     {
-						symbolTable[(yyvsp[(1) - (3)].sindex)] = (yyvsp[(3) - (3)].nptr);
-						(yyval.nptr) = symbolTable[(yyvsp[(1) - (3)].sindex)];
+						//symbolTable[$1] = $3;
+						//$$ = symbolTable[$1];
 					}
     break;
 
 
 
 /* Line 1806 of yacc.c  */
-#line 1549 "y.tab.c"
+#line 1557 "y.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1776,7 +1784,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 93 "yaccFile.y"
+#line 102 "yaccFile.y"
 
 
 void yyerror(char *ch)

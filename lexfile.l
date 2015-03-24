@@ -31,17 +31,17 @@ alphanum [a-zA-Z]+[a-zA-Z0-9]+
 	 }
 {alpha}  {
 		//printf("\nLex\tAlphabet:%s\n",yytext);
-		yylval = *yytext - 'a';
+		yylval.sindex = *yytext - 'a';
 		return ALPHA; 
 	 }
 {digits}\.{digits}	{
 				//printf("\nLex\tFloating:%s\n",yytext);
-				yylval = atof(yytext);
+				yylval.ivalue = atof(yytext);
 				return FLOAT; 
 			}
 {digits} { 	
 		//printf("\nLex\tnumber:%s\n",yytext); 
-		yylval = atoi(yytext);
+		yylval.ivalue = atoi(yytext);
 		return INTEGER;
 	 }
 

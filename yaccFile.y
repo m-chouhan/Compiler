@@ -1,10 +1,13 @@
 %{
+	#include <iostream>
 	#include <stdio.h>
+	#include <vector>
 	#include "NodeHeader.h"
 	extern int yylineno;
 	extern int yylex(void);
 	extern void yyerror(char *);
 
+	using namespace std;
 	int symbolTable[50];
 	int id;
 %}
@@ -12,21 +15,15 @@
 %union{
 	int ivalue;
 	char sindex;
-	Node *nptr;
+	struct Node *nptr;
 }
 
 %token <ivalue> INTEGER
-%token KEYWORD
-%token FLOAT
+%token KEYWORD FLOAT
 %token <sindex> ALPHA
-%token IF
-%token ELSE
-%token WHILE
+%token IF ELSE WHILE
 %token DECLARE
-%token EQ
-%token NEQ
-%token LEQ
-%token GEQ
+%token EQ NEQ LEQ GEQ
 
 %type <nptr> block expr statement statements
 
@@ -57,12 +54,12 @@ bclose:
 					}
 	;
 statements:	
-		statements statement	{  }
+		statements statement	
 		|
 		;
 statement:
 		expr ';'		{ $$ = $1;
-					  printf("Exp:ID:%d\t val:%d\n",id++,$1); 	    
+					  //printf("Exp:ID:%d\t val:%d\n",id++,$1); 	    
 					}	
 		|';'
 		|IF expr block		{ printf("IF{}\n");}
@@ -76,26 +73,28 @@ statement:
 					}
 		;
 expr:
-	INTEGER				{ $$ = $1;		}
+	INTEGER				{ 
+						//$$ = $1;		
+					}
 	|FLOAT
 	|ALPHA				{ 
 						//$$ = symbolTable[$1]; 
 					}
-	|'(' expr ')'			{ $$ = $2;		}
+	|'(' expr ')'			{ 	$$ = $2;	}
 	| expr '+' expr			{ 
-						$$ = $1+$3;		
+						//$$ = $1+$3;		
 					}
 	| expr '-' expr			{ 
-						$$ = $1-$3;		
+						//$$ = $1-$3;		
 					}
 	| expr '*' expr			{ 
-						$$ = $1*$3;		
+						//$$ = $1*$3;		
 					}
 	| expr '/' expr			{ 
-						$$ = $1/$3;		
+						//$$ = $1/$3;		
 					}
 	|ALPHA '=' expr 		{
-						symbolTable[$1] = $3;
+						//symbolTable[$1] = $3;
 						//$$ = symbolTable[$1];
 					}
 	;

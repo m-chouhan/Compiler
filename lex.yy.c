@@ -796,7 +796,7 @@ YY_RULE_SETUP
 #line 32 "lexfile.l"
 {
 		//printf("\nLex\tAlphabet:%s\n",yytext);
-		yylval = *yytext - 'a';
+		yylval.sindex = *yytext - 'a';
 		return ALPHA; 
 	 }
 	YY_BREAK
@@ -805,7 +805,7 @@ YY_RULE_SETUP
 #line 37 "lexfile.l"
 {
 				//printf("\nLex\tFloating:%s\n",yytext);
-				yylval = atof(yytext);
+				yylval.ivalue = atof(yytext);
 				return FLOAT; 
 			}
 	YY_BREAK
@@ -814,7 +814,7 @@ YY_RULE_SETUP
 #line 42 "lexfile.l"
 { 	
 		//printf("\nLex\tnumber:%s\n",yytext); 
-		yylval = atoi(yytext);
+		yylval.ivalue = atoi(yytext);
 		return INTEGER;
 	 }
 	YY_BREAK
