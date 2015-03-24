@@ -2,7 +2,7 @@
 	#include <iostream>
 	#include <stdio.h>
 	#include <vector>
-	#include "NodeHeader.h"
+	#include "NodeHeader2.h"
 	extern int yylineno;
 	extern int yylex(void);
 	extern void yyerror(char *);
