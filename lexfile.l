@@ -1,7 +1,9 @@
 %{
 	//#define INTEGER 300
-	extern void yyerror(char *ch);	
+	extern void yyerror(const char *ch);	
 	#include "y.tab.h"
+	#include <string.h>
+	char buffer[100];
 %}
 
 digit [0-9]
@@ -31,12 +33,15 @@ alphanum [a-zA-Z]+[a-zA-Z0-9]+
 	 }
 {alpha}  {
 		//printf("\nLex\tAlphabet:%s\n",yytext);
-		yylval.sym = yytext;
+		strcpy(buffer,yytext);
+		strtok(buffer," ");
+		strcpy(yylval.symbol,buffer);
+		//yylval.symbol = yytext;
 		return ALPHA; 
 	 }
 {digits}\.{digits}	{
 				//printf("\nLex\tFloating:%s\n",yytext);
-				yylval.ivalue = atof(yytext);
+				yylval.fvalue = atof(yytext);
 				return FLOAT; 
 			}
 {digits} { 	

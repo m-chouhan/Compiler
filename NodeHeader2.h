@@ -1,9 +1,10 @@
-      
+ 
+#include <stdio.h>      
 #include <map>
 #include <algorithm>
 #include <string>
 
-extern void yyerror(char *);
+extern void yyerror(const char *);
 
 typedef enum  { Symbol,Constant,Operation,Block } NodeType;
 typedef std::map<std::string,int> Str_to_Int;
@@ -20,14 +21,8 @@ class SymbolTable
                         Table[ptr] = index++;
                   else yyerror("Multiple declaration ");
             }
-            void Process()
-            {
-                  for(Str_to_Int::iterator it = Table.begin();it != Table.end();it++)
-                  {
-                        it->first;//key
-                        it->second;//value
-                  }
-            }
+            void Push();
+            void Pop();
       };
 
 class Node
@@ -54,12 +49,11 @@ class ConstantNode: public Node
 class SymbolNode: public Node
             {
                   public:
-                  char Index;
-                  SymbolNode( char i )
+                  std::string symbol;
+                  SymbolNode( char *i ) :symbol(i)
                   { 
                         type = Symbol;
                         left = right = 0;
-                        Index = i;
                   }
                   int Process();
             };
@@ -121,7 +115,12 @@ struct Stack
                   }                
                   void AddSymbol(char *sym)
                   {
+                        printf("\nAddSym:%s\n",sym);
                         B[size-1]->sT.AddSymbol(sym);
+                  }
+                  int FindSymbol(char *sym)
+                  {
+                        
                   }
             };
 

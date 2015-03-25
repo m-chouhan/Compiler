@@ -38,8 +38,8 @@
       know about them.  */
    enum yytokentype {
      INTEGER = 258,
-     KEYWORD = 259,
-     FLOAT = 260,
+     FLOAT = 259,
+     KEYWORD = 260,
      ALPHA = 261,
      IF = 262,
      ELSE = 263,
@@ -53,8 +53,8 @@
 #endif
 /* Tokens.  */
 #define INTEGER 258
-#define KEYWORD 259
-#define FLOAT 260
+#define FLOAT 259
+#define KEYWORD 260
 #define ALPHA 261
 #define IF 262
 #define ELSE 263
@@ -76,13 +76,14 @@ typedef union YYSTYPE
 #line 16 "yaccFile.y"
 
 	int ivalue;
-	char sindex;
+	float fvalue;
+	char symbol[50];
 	class Node *nptr;
 
 
 
 /* Line 2068 of yacc.c  */
-#line 86 "y.tab.h"
+#line 87 "y.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

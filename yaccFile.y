@@ -5,7 +5,7 @@
 	#include "NodeHeader2.h"
 	extern int yylineno;
 	extern int yylex(void);
-	extern void yyerror(char *);
+	extern void yyerror(const char *);
 
 	using namespace std;
 	int symbolTable[50];
@@ -15,12 +15,14 @@
 
 %union{
 	int ivalue;
-	char *symbol;
+	float fvalue;
+	char symbol[50];
 	class Node *nptr;
 }
 
 %token <ivalue> INTEGER
-%token KEYWORD FLOAT
+%token <fvalue> FLOAT
+%token KEYWORD
 %token <symbol> ALPHA
 %token IF ELSE WHILE
 %token DECLARE
@@ -120,14 +122,14 @@ expr:
 						$$ = Create($1,$3,'/');		
 					}
 	|ALPHA '=' expr 		{
-						Node *ptr = Create($1,ALPHA);
+						Node *ptr = Create($1);
 						$$ = Create(ptr,$3,'=');		
 					}
 	;
 
 %%
 
-void yyerror(char *ch)
+void yyerror(const char *ch)
 {
 	printf("\n%s on lineNo:%d\n",ch,yylineno);
 }

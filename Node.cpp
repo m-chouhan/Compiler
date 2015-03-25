@@ -2,10 +2,28 @@
 #include "NodeHeader2.h"
 #include "y.tab.h"
 #include <fstream>
+#include <assert.h>
 
 std::ofstream out("Assembly.asm");
 int RegIndex  = 0;
 int LableIndex = 0;
+
+void SymbolTable::Push()
+{
+      for(Str_to_Int::iterator it = Table.begin();it != Table.end();it++)
+      {
+            out<<"Push "<<it->first<<"\n";//key
+            it->second;//value
+      }
+}
+
+
+void SymbolTable::Pop()
+{
+      for(int i = 0;i<Table.size();++i)
+            out<<"Pop\n";
+}
+
 
 int ConstantNode::Process()
 {
@@ -17,7 +35,7 @@ int ConstantNode::Process()
 int SymbolNode::Process()
 {
       RegIndex++;
-      out<<"Load  R"<<RegIndex<<" , "<<"symbolTable["<<(int)Index<<"];\n";
+      out<<"Load  R"<<RegIndex<<" , "<<"search["<<symbol<<"];\n";
       return RegIndex;      
 }
 
@@ -77,12 +95,15 @@ int OperationNode::Process()
 
 int BlockNode::Process()
 {
+      out<<"\n#Block\n";
+      sT.Push();
       for(int i = 0;i<size;++i)
       {
-            sT.Process();
             Array[i]->Process();
             RegIndex = 0;
-      }      
+      }     
+      sT.Pop(); 
+      out<<"#\n";
 }
 
 Node *Create(Node *left,Node *right,int operation)
@@ -92,19 +113,18 @@ Node *Create(Node *left,Node *right,int operation)
 
 Node *Create(int value,int type)
 {
-      Node *ptr = 0;
       switch(type)
       {
-            case ALPHA:
-                        ptr = new SymbolNode(value);
-                        break;
             case INTEGER:
-                        ptr = new ConstantNode(value);
-                        break;
+                        return new ConstantNode(value);
+                        
       }
-      return ptr;
+      assert(0);
+      return 0;
 }
 
 Node *Create(char *sym)
 {
+      printf("\nCreate:%s\n",sym);
+      return new SymbolNode(sym);
 }
