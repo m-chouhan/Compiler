@@ -379,8 +379,8 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[42] =
     {   0,
-        0,    0,   17,   15,    9,    8,   15,   14,    7,   15,
-       14,   15,    5,    5,    5,    5,    5,    9,   11,    0,
+        0,    0,   17,   15,    9,    8,   15,   14,    7,   14,
+       14,   14,    5,    5,    5,    5,    5,    9,   11,    0,
         7,   13,   10,   12,    5,    5,    5,    1,    5,    6,
         5,    5,    5,    5,    2,    5,    5,    3,    5,    4,
         0
@@ -483,12 +483,11 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "lexfile.l"
 #line 2 "lexfile.l"
-	//#define INTEGER 300
 	extern void yyerror(const char *ch);	
 	#include "y.tab.h"
 	#include <string.h>
 	char buffer[100];
-#line 492 "lex.yy.c"
+#line 491 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -675,10 +674,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 15 "lexfile.l"
+#line 14 "lexfile.l"
 
 
-#line 682 "lex.yy.c"
+#line 681 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -763,7 +762,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 17 "lexfile.l"
+#line 16 "lexfile.l"
 {
 		//printf("\nLex\tKEYWORD:%s\n",yytext);
 		return IF; 
@@ -771,7 +770,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 21 "lexfile.l"
+#line 20 "lexfile.l"
 {
 		//printf("\nLex\tKEYWORD:%s\n",yytext);
 		return ELSE; 
@@ -779,7 +778,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 26 "lexfile.l"
+#line 25 "lexfile.l"
 {
 		//printf("\nLex\tKEYWORD:%s\n",yytext);
 		return WHILE; 
@@ -787,7 +786,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 30 "lexfile.l"
+#line 29 "lexfile.l"
 {
 		//printf("\nLex\tKEYWORD %s\n",yytext);
 		return DECLARE;
@@ -795,19 +794,18 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 34 "lexfile.l"
+#line 33 "lexfile.l"
 {
 		//printf("\nLex\tAlphabet:%s\n",yytext);
 		strcpy(buffer,yytext);
 		strtok(buffer," ");
 		strcpy(yylval.symbol,buffer);
-		//yylval.symbol = yytext;
 		return ALPHA; 
 	 }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 42 "lexfile.l"
+#line 40 "lexfile.l"
 {
 				//printf("\nLex\tFloating:%s\n",yytext);
 				yylval.fvalue = atof(yytext);
@@ -816,9 +814,8 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 47 "lexfile.l"
+#line 45 "lexfile.l"
 { 	
-		//printf("\nLex\tnumber:%s\n",yytext); 
 		yylval.ivalue = atoi(yytext);
 		return INTEGER;
 	 }
@@ -826,60 +823,44 @@ YY_RULE_SETUP
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 53 "lexfile.l"
-{ 	
-		yylineno++; 
-		//return *yytext; 
-	 }
+#line 50 "lexfile.l"
+yylineno++; 
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 58 "lexfile.l"
+#line 52 "lexfile.l"
 ;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 60 "lexfile.l"
-{
-		//ECHO;
-		return EQ;
-	}
+#line 54 "lexfile.l"
+return EQ;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 64 "lexfile.l"
-{
-		//ECHO;
-		return NEQ;
-	}
+#line 55 "lexfile.l"
+return NEQ;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 68 "lexfile.l"
-{
-		//ECHO;	
-		return GEQ;
-	}
+#line 56 "lexfile.l"
+return GEQ;	
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 72 "lexfile.l"
-{
-		//ECHO;
-		return LEQ;
-	}
+#line 57 "lexfile.l"
+return LEQ;
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 77 "lexfile.l"
+#line 59 "lexfile.l"
 {
-			//ECHO;
 			return *yytext;
 		}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 82 "lexfile.l"
+#line 63 "lexfile.l"
 { 
 		yyerror("Invalid Token");
 		return 0; 
@@ -887,10 +868,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 87 "lexfile.l"
+#line 68 "lexfile.l"
 ECHO;
 	YY_BREAK
-#line 894 "lex.yy.c"
+#line 875 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1888,7 +1869,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 87 "lexfile.l"
+#line 68 "lexfile.l"
 
 
 

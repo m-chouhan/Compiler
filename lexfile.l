@@ -1,5 +1,4 @@
 %{
-	//#define INTEGER 300
 	extern void yyerror(const char *ch);	
 	#include "y.tab.h"
 	#include <string.h>
@@ -36,7 +35,6 @@ alphanum [a-zA-Z]+[a-zA-Z0-9]+
 		strcpy(buffer,yytext);
 		strtok(buffer," ");
 		strcpy(yylval.symbol,buffer);
-		//yylval.symbol = yytext;
 		return ALPHA; 
 	 }
 {digits}\.{digits}	{
@@ -45,37 +43,20 @@ alphanum [a-zA-Z]+[a-zA-Z0-9]+
 				return FLOAT; 
 			}
 {digits} { 	
-		//printf("\nLex\tnumber:%s\n",yytext); 
 		yylval.ivalue = atoi(yytext);
 		return INTEGER;
 	 }
 
-[\n] 	 { 	
-		yylineno++; 
-		//return *yytext; 
-	 }
+[\n] 	 	yylineno++; 
 
 [ \t]+    ;
 
-"=="	{
-		//ECHO;
-		return EQ;
-	}
-"!="	{
-		//ECHO;
-		return NEQ;
-	}
-">="	{
-		//ECHO;	
-		return GEQ;
-	}
-"<="	{
-		//ECHO;
-		return LEQ;
-	}
-
-[-+*/;()={}]  	{
-			//ECHO;
+"=="		return EQ;
+"!="		return NEQ;
+">="		return GEQ;	
+"<="		return LEQ;
+	
+[-+*/;()={}<>]  {
 			return *yytext;
 		}
 

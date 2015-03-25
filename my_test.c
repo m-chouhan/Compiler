@@ -3,7 +3,7 @@
 	20;
 	declare x;declare y;	
 	{
-		y = x+5;
+		y = x = x+5;
 	}
 	if ( x + 15 )
 	{	

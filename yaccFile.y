@@ -33,8 +33,10 @@
 %type <bptr> block
 
 %left EQ NEQ LEQ GEQ
+%right '='
 %right '+' '-' 
-%left '*' '/'
+%left '*' 
+%right '/'
 
 %%
 

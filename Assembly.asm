@@ -9,6 +9,7 @@ Load  R1 , 20;
 Load  R1 , 5;
 Load  R2 , mem[x,1];
 ADD R3 , R1 , R2 ;
+STORE R3 , mem[x , 1] ;
 STORE R3 , mem[y , 2] ;
 #
 Load  R1 , 15;
