@@ -15,14 +15,23 @@ class SymbolTable
             Str_to_Int Table;
             int index;
             SymbolTable() :index(1) {}
-            void AddSymbol( char *ptr )
+            void AddSymbol( const char *ptr )
             {
                   if( Table.count(ptr) == 0 )  //Symbol doesnot exist
                         Table[ptr] = index++;
                   else yyerror("Multiple declaration ");
             }
+            int FindSymbol( char *ptr )
+            {
+                  return Table.count(ptr);
+            }
+            int size()
+            {
+                  return Table.size();
+            }
             void Push();
             void Pop();
+            
       };
 
 class Node
@@ -50,7 +59,8 @@ class SymbolNode: public Node
             {
                   public:
                   std::string symbol;
-                  SymbolNode( char *i ) :symbol(i)
+                  int pos;
+                  SymbolNode( const char *i,int p ) :symbol(i),pos(p)
                   { 
                         type = Symbol;
                         left = right = 0;
@@ -92,7 +102,7 @@ class BlockNode:public Node
             
 Node *Create(Node *left,Node *right,int operation);
 Node *Create(int value,int type);
-Node *Create(char *sym);
+Node *Create(const char *sym,int pos);
 
 struct Stack
             {
@@ -104,7 +114,7 @@ struct Stack
                   {
                         B[size++] = new BlockNode();
                   }
-                  Node* Pop()
+                  BlockNode* Pop()
                   {
                         size--;
                         return B[size];
@@ -115,12 +125,19 @@ struct Stack
                   }                
                   void AddSymbol(char *sym)
                   {
-                        printf("\nAddSym:%s\n",sym);
+                        //printf("\nAddSym:%s\n",sym);
                         B[size-1]->sT.AddSymbol(sym);
                   }
                   int FindSymbol(char *sym)
                   {
-                        
+                        for(int i = size -1;i>=0;--i)
+                        {
+                              int index = B[i]->sT.FindSymbol(sym);
+                              if( index == 1 ) return size - i -1; //return id of stack from top 
+                        }
+                        std::string str("Undeclared variable:");
+                        str += sym;
+                        yyerror(str.c_str());
                   }
             };
 

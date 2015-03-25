@@ -1,9 +1,12 @@
 {
 	10;
+	declare y;
 	declare x;	
 	{
-		x    +5;
+		declare z;
+		z+5;
 	}
+	y + 2;
 	while( 2 )
 	{
 		x = x+4;

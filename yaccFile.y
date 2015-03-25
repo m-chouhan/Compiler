@@ -18,6 +18,7 @@
 	float fvalue;
 	char symbol[50];
 	class Node *nptr;
+	class BlockNode *bptr;
 }
 
 %token <ivalue> INTEGER
@@ -28,7 +29,8 @@
 %token DECLARE
 %token EQ NEQ LEQ GEQ
 
-%type <nptr> block expr statement statements
+%type <nptr> expr statement statements
+%type <bptr> block
 
 %left EQ NEQ LEQ GEQ
 %right '+' '-' 
@@ -93,20 +95,20 @@ statement:
 					}
 
 		|DECLARE ALPHA ';' 	{
-			 			//symbolTable[$2] = 0; 
-						//$$ = Create($2,ALPHA);//change to Declare() alpha
 						St.AddSymbol($2);
 					}
 		|block			{
-						St.Add($1);
+						if($1->size > 0);
+							St.Add($1);
 					}
 		;
 expr:
 	INTEGER				{ 
 						$$ = Create($1,INTEGER);		
 					}
-	|ALPHA				{ 
-						$$ = Create($1);
+	|ALPHA				{
+						int pos = St.FindSymbol($1); 
+						$$ = Create($1,pos);
 					}
 	|'(' expr ')'			{ 	$$ = $2;	}
 	| expr '+' expr			{ 
@@ -122,7 +124,8 @@ expr:
 						$$ = Create($1,$3,'/');		
 					}
 	|ALPHA '=' expr 		{
-						Node *ptr = Create($1);
+						int pos = St.FindSymbol($1); 
+						Node *ptr = Create($1,pos);
 						$$ = Create(ptr,$3,'=');		
 					}
 	;
@@ -132,6 +135,7 @@ expr:
 void yyerror(const char *ch)
 {
 	printf("\n%s on lineNo:%d\n",ch,yylineno);
+	exit(0);
 }
 
 int main()

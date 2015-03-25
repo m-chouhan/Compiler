@@ -17,7 +17,6 @@ void SymbolTable::Push()
       }
 }
 
-
 void SymbolTable::Pop()
 {
       for(int i = 0;i<Table.size();++i)
@@ -35,7 +34,7 @@ int ConstantNode::Process()
 int SymbolNode::Process()
 {
       RegIndex++;
-      out<<"Load  R"<<RegIndex<<" , "<<"search["<<symbol<<"];\n";
+      out<<"Load  R"<<RegIndex<<" , "<<"search["<<symbol<<","<<pos<<"];\n";
       return RegIndex;      
 }
 
@@ -123,8 +122,8 @@ Node *Create(int value,int type)
       return 0;
 }
 
-Node *Create(char *sym)
+Node *Create(const char *sym,int pos)
 {
-      printf("\nCreate:%s\n",sym);
-      return new SymbolNode(sym);
+      //printf("\nCreate:%s\n",sym);
+      return new SymbolNode(sym,pos);
 }

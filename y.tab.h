@@ -79,11 +79,12 @@ typedef union YYSTYPE
 	float fvalue;
 	char symbol[50];
 	class Node *nptr;
+	class BlockNode *bptr;
 
 
 
 /* Line 2068 of yacc.c  */
-#line 87 "y.tab.h"
+#line 88 "y.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
