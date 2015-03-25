@@ -23,7 +23,9 @@ class SymbolTable
             }
             int FindSymbol( char *ptr )
             {
-                  return Table.count(ptr);
+                  if(Table.count(ptr))
+                        return Table[ptr];
+                  return -1;
             }
             int size()
             {
@@ -130,10 +132,12 @@ struct Stack
                   }
                   int FindSymbol(char *sym)
                   {
+                        int offset = 0;
                         for(int i = size -1;i>=0;--i)
                         {
                               int index = B[i]->sT.FindSymbol(sym);
-                              if( index == 1 ) return size - i -1; //return id of stack from top 
+                              if( index == -1 )  offset += B[i]->sT.size(); //return id of stack from top
+                              else return offset+index; 
                         }
                         std::string str("Undeclared variable:");
                         str += sym;

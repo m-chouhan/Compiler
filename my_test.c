@@ -1,21 +1,20 @@
 {
 	10;
 	20;
-	
-	x = 10;
+	declare x;declare y;	
 	{
-		x+5;
+		y = x+5;
 	}
 	if ( x + 15 )
 	{	
 		10+10;
-		x = 20;
+		x+20;
 	}
 	if ( 5) {}
 	else 
 	{ 
 		declare z;
-		z = 6;
+		z + x;
 	}
 	while( 2 )
 	{

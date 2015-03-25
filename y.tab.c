@@ -1440,7 +1440,7 @@ yyreduce:
     {
 						St.Push();
 						//id = 0;
-						printf("{ ...");
+						//printf("{ ...");
 					}
     break;
 
@@ -1451,7 +1451,7 @@ yyreduce:
     {
 						
 						//id = pop_id();
-						printf("....}->");
+						//printf("....}->");
 					}
     break;
 

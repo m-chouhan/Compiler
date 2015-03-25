@@ -19,8 +19,11 @@ void SymbolTable::Push()
 
 void SymbolTable::Pop()
 {
-      for(int i = 0;i<Table.size();++i)
-            out<<"Pop\n";
+      for(Str_to_Int::iterator it = Table.begin();it != Table.end();it++)
+      {
+            out<<"Pop "<<it->first<<"\n";//key
+            it->second;//value
+      }
 }
 
 
@@ -34,7 +37,7 @@ int ConstantNode::Process()
 int SymbolNode::Process()
 {
       RegIndex++;
-      out<<"Load  R"<<RegIndex<<" , "<<"search["<<symbol<<","<<pos<<"];\n";
+      out<<"Load  R"<<RegIndex<<" , "<<"mem["<<symbol<<","<<pos<<"];\n";
       return RegIndex;      
 }
 
@@ -47,25 +50,26 @@ int OperationNode::Process()
                         {
                               int reg = left->Process();
                               int L = ++LableIndex;
-                              out<<"BEQZ R"<<reg<<" , "<<"Lable"<<L<<"\n";
+                              out<<"BEQZ R"<<reg<<" , "<<"ELSE"<<L<<"\n";
                               right->Process();
-                              out<<"Lable"<<L<<":\n";
-                              break;
+                              out<<"ELSE"<<L<<":\n";
+                              return 0;
                         }
                         else  //right is an else block
                         {
+                              assert(right->type == Operation);
                               int reg = left->Process();
                               int L1 = ++LableIndex;
                               int L2 = ++LableIndex;
                               
-                              out<<"BEQZ R"<<reg<<" , "<<"Lable"<<L1<<"\n";
+                              out<<"BEQZ R"<<reg<<" , "<<"ELSE"<<L1<<"\n";
                               right->left->Process();
-                              out<<"JUMP Lable"<<L2<<"\n";
-                              out<<"Lable"<<L1<<":\n";                              
+                              out<<"JUMP IF"<<L2<<"\n";
+                              out<<"ELSE"<<L1<<":\n";                              
                               right->right->Process();
-                              out<<"Lable"<<L2<<": \n";
+                              out<<"IF"<<L2<<": \n";
+                              return 0;
                         }
-                        break;
             //~ case ELSE:
                         //~ break;
             case WHILE:
@@ -75,7 +79,7 @@ int OperationNode::Process()
                               int reg1 = right->Process(); //This is block
                               int reg2 = left->Process();  //This is Expression
                               out<<"BEQZ R"<<reg2<<" , "<<"LOOP"<<L<<"\n";
-                              break;
+                              return 0;
                         }
             case '+':
                         {
@@ -87,13 +91,21 @@ int OperationNode::Process()
                         }
                         
             case '=':
-                              return 0;
-                        break;
+                        {
+                              assert(left->type == Symbol);
+                              SymbolNode *sN = dynamic_cast<SymbolNode *> (left);
+                              int reg1 = right->Process();
+                              int p = sN->pos;
+                              out<<"STORE R"<<reg1<<" , mem["<<sN->symbol<<" , "<<p<<"] ;\n";
+                              return reg1;                              
+                        }     
       }
+      yyerror("Syntax/Semantic Error");
 }
 
 int BlockNode::Process()
 {
+      if( size == 0 ) return 0;
       out<<"\n#Block\n";
       sT.Push();
       for(int i = 0;i<size;++i)
@@ -103,6 +115,7 @@ int BlockNode::Process()
       }     
       sT.Pop(); 
       out<<"#\n";
+      return 0;
 }
 
 Node *Create(Node *left,Node *right,int operation)

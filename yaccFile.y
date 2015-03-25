@@ -54,14 +54,14 @@ bopen:
 	'{'				{
 						St.Push();
 						//id = 0;
-						printf("{ ...");
+						//printf("{ ...");
 					}
 	;
 bclose:
 	'}'				{
 						
 						//id = pop_id();
-						printf("....}->");
+						//printf("....}->");
 					}
 	;
 statements:	
