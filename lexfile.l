@@ -31,7 +31,7 @@ alphanum [a-zA-Z]+[a-zA-Z0-9]+
 	 }
 {alpha}  {
 		//printf("\nLex\tAlphabet:%s\n",yytext);
-		yylval.sindex = *yytext - 'a';
+		yylval.sym = yytext;
 		return ALPHA; 
 	 }
 {digits}\.{digits}	{

@@ -15,13 +15,13 @@
 
 %union{
 	int ivalue;
-	char sindex;
+	char *symbol;
 	class Node *nptr;
 }
 
 %token <ivalue> INTEGER
 %token KEYWORD FLOAT
-%token <sindex> ALPHA
+%token <symbol> ALPHA
 %token IF ELSE WHILE
 %token DECLARE
 %token EQ NEQ LEQ GEQ
@@ -29,24 +29,27 @@
 %type <nptr> block expr statement statements
 
 %left EQ NEQ LEQ GEQ
-%left '+' '-' 
+%right '+' '-' 
 %left '*' '/'
 
 %%
 
 start:
-	block
+	block				{
+						printf("\nEND\n");
+						$1->Process();
+					}
 	;
 block:
 	bopen statements bclose	 	{ 
 						$$ = St.Pop();
-						printf("{}->"); 
+						//printf("{}->"); 
 					}
 	;
 bopen:
 	'{'				{
 						St.Push();
-						id = 0;
+						//id = 0;
 						printf("{ ...");
 					}
 	;
@@ -71,22 +74,29 @@ statement:
 		|IF expr block		{ 
 						$$ = Create($2,$3,IF);
 						//printf("IF{}\n");
+						St.Add($$);
 						
 					}
 		|IF expr block ELSE block	{
 							Node *ptr = Create($3,$5,ELSE);
 							$$ = Create($2,ptr,IF); 
-							printf("IF{}ELSE{}\n");
+							St.Add($$);
+							//printf("IF{}ELSE{}\n");
 						}
 
 		|WHILE expr block	{ 
 						$$ = Create($2,$3,WHILE);
-						printf("WHILE{}\n");
+						St.Add($$);
+						//printf("WHILE{}\n");
 					}
 
 		|DECLARE ALPHA ';' 	{
-			 			symbolTable[$2] = 0; 
-						$$ = Create($2,ALPHA);//change to Declare() alpha
+			 			//symbolTable[$2] = 0; 
+						//$$ = Create($2,ALPHA);//change to Declare() alpha
+						St.AddSymbol($2);
+					}
+		|block			{
+						St.Add($1);
 					}
 		;
 expr:
@@ -94,7 +104,7 @@ expr:
 						$$ = Create($1,INTEGER);		
 					}
 	|ALPHA				{ 
-						$$ = Create($1,ALPHA);
+						$$ = Create($1);
 					}
 	|'(' expr ')'			{ 	$$ = $2;	}
 	| expr '+' expr			{ 
@@ -110,7 +120,8 @@ expr:
 						$$ = Create($1,$3,'/');		
 					}
 	|ALPHA '=' expr 		{
-						$$ = Create($1,$3,'=');		
+						Node *ptr = Create($1,ALPHA);
+						$$ = Create(ptr,$3,'=');		
 					}
 	;
 
