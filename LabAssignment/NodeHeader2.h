@@ -23,7 +23,7 @@ class SymbolTable
                   else
                   {
                         str = "Multiple Declaration of symbol "+str;
-                        yyerror(str.c_str());
+                        //~ yyerror(str.c_str());
                   }
             }
             int FindSymbol( char *ptr )
@@ -38,15 +38,13 @@ class SymbolTable
             }
             void Push();
             void Pop();
+            
       };
-
-int TypeCheck(int t1,int t2);
 
 class Node
 {
             public:
             NodeType type;
-            int expType;
             Node *left,*right;
             virtual int Process() =0;
 };
@@ -68,8 +66,7 @@ class SymbolNode: public Node
             {
                   public:
                   std::string symbol;
-                  int pos;
-                  SymbolNode( const char *i,int p ) :symbol(i),pos(p)
+                  SymbolNode( const char *i) :symbol(i)
                   { 
                         type = Symbol;
                         left = right = 0;
@@ -111,7 +108,7 @@ class BlockNode:public Node
             
 Node *Create(Node *left,Node *right,int operation);
 Node *Create(int value,int type);
-Node *Create(const char *sym,int pos);
+Node *Create(const char *sym);
 
 struct Stack
             {
@@ -151,8 +148,6 @@ struct Stack
                         }
                         std::string str("Undeclared variable:");
                         str += sym;
-                        yyerror(str.c_str());
+                        //~ yyerror(str.c_str());
                   }
             };
-
-extern int symbolTable[50];

@@ -1,24 +1,11 @@
-{
-	10;
-	20;
-	declare x;
-	x = 10;
-	x+5;
-	if ( x + 5 )
-	{	
-		10+10;
-		x = 20;
-	}
-	if ( 5) {}
-	else 
-	{ 
-		declare z;
-		z = 6;
-	}
-	while( 2 )
+
+	read Y ;
+	asd = (90+7);
+
+	while (aX == 100) do
 	{
-		if(1) {}
-		x = x+4;
+		print X;
+		X = X + 1;
 	}
 
-}
+

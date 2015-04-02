@@ -25,7 +25,19 @@ void SymbolTable::Pop()
             it->second;//value
       }
 }
+bool IsSubtype(int t1,int t2)
+{
+      
+}
 
+int TypeCheck(int t1,int t2)
+{           
+            if( IsSubtype(t1,t2) )
+                  return t2;
+            else if( IsSubtype(t2,t1) ) 
+                  return t1;
+            return OBJECT;
+}
 
 int ConstantNode::Process()
 {
@@ -70,8 +82,6 @@ int OperationNode::Process()
                               out<<"IF"<<L2<<": \n";
                               return 0;
                         }
-            //~ case ELSE:
-                        //~ break;
             case WHILE:
                          {     
                               int L = ++LableIndex; 
@@ -87,6 +97,30 @@ int OperationNode::Process()
                               int reg2 = left->Process();
                               RegIndex++;
                               out<<"ADD R"<<RegIndex<<" , R"<<reg1<<" , R"<<reg2<<" ;\n";
+                              return RegIndex;
+                        }
+            case '-':
+                        {
+                              int reg1 = right->Process();
+                              int reg2 = left->Process();
+                              RegIndex++;
+                              out<<"SUB R"<<RegIndex<<" , R"<<reg1<<" , R"<<reg2<<" ;\n";
+                              return RegIndex;
+                        }
+            case '*':
+                        {
+                              int reg1 = right->Process();
+                              int reg2 = left->Process();
+                              RegIndex++;
+                              out<<"MUL R"<<RegIndex<<" , R"<<reg1<<" , R"<<reg2<<" ;\n";
+                              return RegIndex;
+                        }
+            case '/':
+                        {
+                              int reg1 = right->Process();
+                              int reg2 = left->Process();
+                              RegIndex++;
+                              out<<"DIV R"<<RegIndex<<" , R"<<reg1<<" , R"<<reg2<<" ;\n";
                               return RegIndex;
                         }
                         

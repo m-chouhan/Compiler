@@ -38,32 +38,34 @@
       know about them.  */
    enum yytokentype {
      INTEGER = 258,
-     FLOAT = 259,
-     KEYWORD = 260,
+     DOUBLE = 259,
+     BYTE = 260,
      ALPHA = 261,
-     IF = 262,
-     ELSE = 263,
-     WHILE = 264,
-     DECLARE = 265,
-     EQ = 266,
-     NEQ = 267,
-     LEQ = 268,
-     GEQ = 269
+     OBJECT = 262,
+     IF = 263,
+     ELSE = 264,
+     WHILE = 265,
+     DECLARE = 266,
+     EQ = 267,
+     NEQ = 268,
+     LEQ = 269,
+     GEQ = 270
    };
 #endif
 /* Tokens.  */
 #define INTEGER 258
-#define FLOAT 259
-#define KEYWORD 260
+#define DOUBLE 259
+#define BYTE 260
 #define ALPHA 261
-#define IF 262
-#define ELSE 263
-#define WHILE 264
-#define DECLARE 265
-#define EQ 266
-#define NEQ 267
-#define LEQ 268
-#define GEQ 269
+#define OBJECT 262
+#define IF 263
+#define ELSE 264
+#define WHILE 265
+#define DECLARE 266
+#define EQ 267
+#define NEQ 268
+#define LEQ 269
+#define GEQ 270
 
 
 
@@ -73,10 +75,11 @@ typedef union YYSTYPE
 {
 
 /* Line 2068 of yacc.c  */
-#line 16 "yaccFile.y"
+#line 15 "yaccFile.y"
 
+	char byte;
 	int ivalue;
-	float fvalue;
+	double dvalue;
 	char symbol[50];
 	class Node *nptr;
 	class BlockNode *bptr;
@@ -84,7 +87,7 @@ typedef union YYSTYPE
 
 
 /* Line 2068 of yacc.c  */
-#line 88 "y.tab.h"
+#line 91 "y.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

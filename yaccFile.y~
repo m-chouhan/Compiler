@@ -2,7 +2,6 @@
 	#include <iostream>
 	#include <stdio.h>
 	#include <vector>
-	#include <assert.h>
 	#include "NodeHeader2.h"
 	extern int yylineno;
 	extern int yylex(void);
@@ -15,14 +14,18 @@
 
 %union{
 	int ivalue;
+	float fvalue;
 	char symbol[50];
 	class Node *nptr;
 	class BlockNode *bptr;
 }
 
 %token <ivalue> INTEGER
+%token <fvalue> FLOAT
+%token KEYWORD
 %token <symbol> ALPHA
-%token IF ELSE WHILE THEN DO READ PRINT
+%token IF ELSE WHILE
+%token DECLARE
 %token EQ NEQ LEQ GEQ
 
 %type <nptr> expr statement statements
@@ -31,7 +34,7 @@
 %left EQ NEQ LEQ GEQ
 %right '='
 %right '+' '-' 
-%right '*' 
+%left '*' 
 %right '/'
 
 %%
@@ -71,36 +74,31 @@ statement:
 					  	//printf("Exp:ID:%d\t val:%d\n",id++,$1); 	    
 					}	
 		|';'
-		|IF expr THEN block		{ 
-							$$ = Create($2,$4,IF);
-							//printf("IF{}\n");
-							St.Add($$);
+		|IF expr block		{ 
+						$$ = Create($2,$3,IF);
+						//printf("IF{}\n");
+						St.Add($$);
 						
-						}
-		|IF expr THEN block ELSE block	{
-							Node *ptr = Create($4,$6,ELSE);
+					}
+		|IF expr block ELSE block	{
+							Node *ptr = Create($3,$5,ELSE);
 							$$ = Create($2,ptr,IF); 
 							St.Add($$);
 							//printf("IF{}ELSE{}\n");
 						}
 
-		|WHILE expr DO block	{ 
-						$$ = Create($2,$4,WHILE);
+		|WHILE expr block	{ 
+						$$ = Create($2,$3,WHILE);
 						St.Add($$);
 						//printf("WHILE{}\n");
 					}
 
+		|DECLARE ALPHA ';' 	{
+						St.AddSymbol($2);
+					}
 		|block			{
 						if($1->size > 0);
 							St.Add($1);
-					}
-		|READ ALPHA ';'		{
-						St.AddSymbol($2);
-						Node *ptr = Create($2);
-						$$ = Create(0,ptr,READ);
-						St.Add($$);	
-					}
-		|PRINT expr ';'		{
 					}
 		;
 expr:
@@ -108,12 +106,10 @@ expr:
 						$$ = Create($1,INTEGER);		
 					}
 	|ALPHA				{
-						St.AddSymbol($1);
-						$$ = Create($1);
+						int pos = St.FindSymbol($1); 
+						$$ = Create($1,pos);
 					}
 	|'(' expr ')'			{ 	$$ = $2;	}
-	|'(' '-' expr ')'		{
-					}
 	| expr '+' expr			{ 
 						$$ = Create($1,$3,'+');		
 					}
@@ -126,21 +122,9 @@ expr:
 	| expr '/' expr			{ 
 						$$ = Create($1,$3,'/');		
 					}
-	| expr NEQ expr			{
-						$$ = Create($1,$3,NEQ);		
-					}
-	| expr EQ  expr			{
-						$$ = Create($1,$3,EQ);		
-					}
-	| expr GEQ expr			{
-						$$ = Create($1,$3,GEQ);		
-					}
-	| expr LEQ expr			{
-						$$ = Create($1,$3,LEQ);		
-					}
 	|ALPHA '=' expr 		{
-						St.AddSymbol($1); 
-						Node *ptr = Create($1);
+						int pos = St.FindSymbol($1); 
+						Node *ptr = Create($1,pos);
 						$$ = Create(ptr,$3,'=');		
 					}
 	;

@@ -1,14 +1,4 @@
-
-lex:
-	lex lexfile.l
-	gcc lex.yy.c
-	./a.out
-
-yacc:
+all:
 	yacc -d yaccFile.y
 	lex lexfile.l
-	gcc lex.yy.c y.tab.c -o compiler -lfl
-yacpp:
-	yacc -d yaccFile.y
-	lex lexfile.l
-	g++ lex.yy.c y.tab.c -o compiler -lfl
+	g++ -g lex.yy.c y.tab.c Node.cpp -o compiler -lfl

@@ -2,7 +2,6 @@
 	#include <iostream>
 	#include <stdio.h>
 	#include <vector>
-	#include <assert.h>
 	#include "NodeHeader2.h"
 	extern int yylineno;
 	extern int yylex(void);
@@ -94,11 +93,7 @@ statement:
 						if($1->size > 0);
 							St.Add($1);
 					}
-		|READ ALPHA ';'		{
-						St.AddSymbol($2);
-						Node *ptr = Create($2);
-						$$ = Create(0,ptr,READ);
-						St.Add($$);	
+		|READ ALPHA		{
 					}
 		|PRINT expr ';'		{
 					}
@@ -109,6 +104,7 @@ expr:
 					}
 	|ALPHA				{
 						St.AddSymbol($1);
+						//int pos = St.FindSymbol($1); 
 						$$ = Create($1);
 					}
 	|'(' expr ')'			{ 	$$ = $2;	}
@@ -126,20 +122,11 @@ expr:
 	| expr '/' expr			{ 
 						$$ = Create($1,$3,'/');		
 					}
-	| expr NEQ expr			{
-						$$ = Create($1,$3,NEQ);		
-					}
-	| expr EQ  expr			{
-						$$ = Create($1,$3,EQ);		
-					}
-	| expr GEQ expr			{
-						$$ = Create($1,$3,GEQ);		
-					}
-	| expr LEQ expr			{
-						$$ = Create($1,$3,LEQ);		
-					}
+	| expr NEQ expr
+	| expr EQ  expr
+	| expr 
 	|ALPHA '=' expr 		{
-						St.AddSymbol($1); 
+						//int pos = St.FindSymbol($1); 
 						Node *ptr = Create($1);
 						$$ = Create(ptr,$3,'=');		
 					}

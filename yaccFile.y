@@ -8,23 +8,24 @@
 	extern void yyerror(const char *);
 
 	using namespace std;
-	int symbolTable[50];
 	int id;
 	Stack St;
 %}
 
 %union{
+	char byte;
 	int ivalue;
-	float fvalue;
+	double dvalue;
 	char symbol[50];
 	class Node *nptr;
 	class BlockNode *bptr;
 }
 
 %token <ivalue> INTEGER
-%token <fvalue> FLOAT
-%token KEYWORD
+%token <dvalue> DOUBLE
+%token <byte> BYTE
 %token <symbol> ALPHA
+%token OBJECT
 %token IF ELSE WHILE
 %token DECLARE
 %token EQ NEQ LEQ GEQ
@@ -35,15 +36,16 @@
 %left EQ NEQ LEQ GEQ
 %right '='
 %right '+' '-' 
-%left '*' 
+%right '*' 
 %right '/'
 
 %%
 
 start:
-	block				{
+	statements			{
 						printf("\nEND\n");
-						$1->Process();
+						St.B[0]->Process();	
+						//$1->Process();
 					}
 	;
 block:
@@ -55,16 +57,15 @@ block:
 bopen:
 	'{'				{
 						St.Push();
-						//id = 0;
-						//printf("{ ...");
 					}
 	;
 bclose:
-	'}'				{
-						
-						//id = pop_id();
-						//printf("....}->");
-					}
+	'}'
+	;
+objtype:
+	INTEGER
+	|DOUBLE
+	|BYTE
 	;
 statements:	
 		statements statement	
@@ -96,9 +97,9 @@ statement:
 						//printf("WHILE{}\n");
 					}
 
-		|DECLARE ALPHA ';' 	{
-						St.AddSymbol($2);
-					}
+		|DECLARE ALPHA ':' objtype ';' 	{
+							St.AddSymbol($2,$4);
+						}
 		|block			{
 						if($1->size > 0);
 							St.Add($1);
@@ -112,6 +113,8 @@ expr:
 						int pos = St.FindSymbol($1); 
 						$$ = Create($1,pos);
 					}
+	|DOUBLE				{}
+	|BYTE				{}
 	|'(' expr ')'			{ 	$$ = $2;	}
 	| expr '+' expr			{ 
 						$$ = Create($1,$3,'+');		

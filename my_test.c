@@ -1,7 +1,7 @@
-{
-	10;
-	20;
-	declare x;declare y;	
+
+	'1';
+	'2';
+	declare x:int;declare y:double;
 	{
 		y = x = x+5;
 	}
@@ -21,6 +21,7 @@
 		if(1) {}
 		x = x+4;
 	}
-	1+2+3+4;
+	declare z;
+	z = 1+2+3+4;
 
-}
+

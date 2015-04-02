@@ -8,7 +8,6 @@
 digit [0-9]
 digits [0-9]+
 alpha [a-zA-Z]+
-float [digits]\.[digits]
 alphanum [a-zA-Z]+[a-zA-Z0-9]+
 
 %%
@@ -26,10 +25,14 @@ alphanum [a-zA-Z]+[a-zA-Z0-9]+
 		//printf("\nLex\tKEYWORD:%s\n",yytext);
 		return WHILE; 
 	 }
-"declare"  {
-		//printf("\nLex\tKEYWORD %s\n",yytext);
-		return DECLARE;
-	 }
+"declare" return DECLARE;
+	
+"int"	return INTEGER;
+	
+"byte"  return BYTE;
+
+"double" return DOUBLE;	
+
 {alpha}  {
 		//printf("\nLex\tAlphabet:%s\n",yytext);
 		strcpy(buffer,yytext);
@@ -37,10 +40,17 @@ alphanum [a-zA-Z]+[a-zA-Z0-9]+
 		strcpy(yylval.symbol,buffer);
 		return ALPHA; 
 	 }
+
+"'"[a-zA-Z0-9]"'"	{
+				yylval.byte = yytext[1];
+				printf("%s\n",yytext);
+				return BYTE;	
+			}
+
 {digits}\.{digits}	{
 				//printf("\nLex\tFloating:%s\n",yytext);
-				yylval.fvalue = atof(yytext);
-				return FLOAT; 
+				yylval.dvalue = atof(yytext);
+				return DOUBLE; 
 			}
 {digits} { 	
 		yylval.ivalue = atoi(yytext);
@@ -56,7 +66,7 @@ alphanum [a-zA-Z]+[a-zA-Z0-9]+
 ">="		return GEQ;	
 "<="		return LEQ;
 	
-[-+*/;()={}<>]  {
+[-+*/;()={}<>:]  {
 			return *yytext;
 		}
 
@@ -71,10 +81,3 @@ int yywrap(void)
 {
 	return 1;
 }
-/*
-void main(void)
-{
-	yylex();
-	printf("\n%d",yylineno);
-}
-*/

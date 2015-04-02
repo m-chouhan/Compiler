@@ -19,27 +19,28 @@ alpha [a-zA-Z]+
 		return THEN;
 	 }
 "else"   {
+		//printf("\nLex\tKEYWORD:%s\n",yytext);
 		return ELSE; 
 	 }
 
 "while"  {
+		//printf("\nLex\tKEYWORD:%s\n",yytext);
 		return WHILE; 
 	 }
 "do"	 {
 		return DO;
 	 }
 "read"	{	
-		printf("Read Token\n");	
 		return READ;
 	}
 "print" {
 		return PRINT;
 	}
 {alpha}  {
+		//printf("\nLex\tAlphabet:%s\n",yytext);
 		strcpy(buffer,yytext);
 		strtok(buffer," ");
 		strcpy(yylval.symbol,buffer);
-		printf("\nLex\tAlphabet:%s\n",yylval.symbol);
 		return ALPHA; 
 	 }
 {digits} { 	
