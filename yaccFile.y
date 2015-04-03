@@ -24,16 +24,18 @@
 %token <ivalue> INTEGER
 %token <dvalue> DOUBLE
 %token <byte> BYTE
+%token OBJLIST
+
+%token <ivalue> KEY_INT KEY_DOUBLE KEY_BYTE OBJECT
 %token <symbol> ALPHA
-%token OBJECT
 %token IF ELSE WHILE
 %token DECLARE
 %token EQ NEQ LEQ GEQ
 
-%type <nptr> expr statement statements
+%type <nptr> expr statement statements objlist
 %type <bptr> block
-
-%left EQ NEQ LEQ GEQ
+%type <ivalue> objtype
+%right EQ NEQ LEQ GEQ '<' '>'
 %right '='
 %right '+' '-' 
 %right '*' 
@@ -63,9 +65,13 @@ bclose:
 	'}'
 	;
 objtype:
-	INTEGER
-	|DOUBLE
-	|BYTE
+	KEY_INT		{$$ = INTEGER; }
+	|KEY_DOUBLE	{$$ = DOUBLE; }
+	|KEY_BYTE	{$$ = BYTE; }
+	;
+objlist:
+	ALPHA ',' objlist	{ $$ = Create(Create($1,Tuple(0,0)),$3,OBJLIST);}
+	|ALPHA			{ $$ = Create($1,Tuple(0,0)); }
 	;
 statements:	
 		statements statement	
@@ -74,35 +80,35 @@ statements:
 statement:
 		expr ';'		{ 
 						$$ = $1;
-					 	St.Add($1);
+					 	St.Add($1,yylineno);
 					  	//printf("Exp:ID:%d\t val:%d\n",id++,$1); 	    
 					}	
 		|';'
 		|IF expr block		{ 
 						$$ = Create($2,$3,IF);
 						//printf("IF{}\n");
-						St.Add($$);
+						St.Add($$,yylineno);
 						
 					}
 		|IF expr block ELSE block	{
 							Node *ptr = Create($3,$5,ELSE);
 							$$ = Create($2,ptr,IF); 
-							St.Add($$);
+							St.Add($$,yylineno);
 							//printf("IF{}ELSE{}\n");
 						}
 
 		|WHILE expr block	{ 
 						$$ = Create($2,$3,WHILE);
-						St.Add($$);
+						St.Add($$,yylineno);
 						//printf("WHILE{}\n");
 					}
 
-		|DECLARE ALPHA ':' objtype ';' 	{
-							St.AddSymbol($2,$4);
+		|DECLARE objtype objlist ';' 	{
+							St.AddSymbols($2,$3);
 						}
 		|block			{
 						if($1->size > 0);
-							St.Add($1);
+							St.Add($1,yylineno);
 					}
 		;
 expr:
@@ -110,11 +116,11 @@ expr:
 						$$ = Create($1,INTEGER);		
 					}
 	|ALPHA				{
-						int pos = St.FindSymbol($1); 
+						Tuple pos = St.FindSymbol($1); 
 						$$ = Create($1,pos);
 					}
-	|DOUBLE				{}
-	|BYTE				{}
+	|DOUBLE				{	$$ = Create($1,DOUBLE);}
+	|BYTE				{	$$ = Create($1,BYTE);  }
 	|'(' expr ')'			{ 	$$ = $2;	}
 	| expr '+' expr			{ 
 						$$ = Create($1,$3,'+');		
@@ -128,8 +134,26 @@ expr:
 	| expr '/' expr			{ 
 						$$ = Create($1,$3,'/');		
 					}
+	| expr '<' expr			{ 
+						$$ = Create($1,$3,'/');		
+					}
+	| expr '>' expr			{ 
+						$$ = Create($1,$3,'/');		
+					}
+	| expr LEQ expr			{ 
+						$$ = Create($1,$3,'/');		
+					}
+	| expr GEQ  expr		{ 
+						$$ = Create($1,$3,'/');		
+					}
+	| expr NEQ  expr		{ 
+						$$ = Create($1,$3,'/');		
+					}
+	| expr EQ  expr			{ 
+						$$ = Create($1,$3,'/');		
+					}
 	|ALPHA '=' expr 		{
-						int pos = St.FindSymbol($1); 
+						Tuple pos = St.FindSymbol($1); 
 						Node *ptr = Create($1,pos);
 						$$ = Create(ptr,$3,'=');		
 					}
@@ -139,8 +163,12 @@ expr:
 
 void yyerror(const char *ch)
 {
-	printf("\n%s on lineNo:%d\n",ch,yylineno);
+	printf("\nError: %s on lineNo:%d\n",ch,yylineno);
 	exit(0);
+}
+void yywarning(const char *ch)
+{
+	printf("\nWarning: %s on lineNo:%d\n",ch,yylineno);
 }
 
 int main()

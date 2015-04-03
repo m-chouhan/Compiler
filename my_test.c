@@ -1,7 +1,7 @@
 
 	'1';
 	'2';
-	declare x:int;declare y:double;
+	declare int x;declare double y;
 	{
 		y = x = x+5;
 	}
@@ -13,7 +13,7 @@
 	if ( 5) {}
 	else 
 	{ 
-		declare z;
+		declare byte z;
 		z + x;
 	}
 	while( 2 )
@@ -21,7 +21,7 @@
 		if(1) {}
 		x = x+4;
 	}
-	declare z;
+	declare int z;
 	z = 1+2+3+4;
 
 

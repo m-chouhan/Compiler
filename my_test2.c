@@ -1,18 +1,8 @@
-{
-	10;
-	declare y;
-	declare x;	
+	10.5;
+	declare int y,z;
+	declare double x;
+	y = x < 4;	
 	{
-		declare z;
-		z+5;
+		declare byte z;z = 10;z = '5';
 	}
-	y + 2;
-	while( 2 )
-	{
-		x = x+4;
-		declare z;
-		z + 123;
-	}
-	1+2+3+4;
 
-}

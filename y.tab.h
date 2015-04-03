@@ -40,32 +40,40 @@
      INTEGER = 258,
      DOUBLE = 259,
      BYTE = 260,
-     ALPHA = 261,
-     OBJECT = 262,
-     IF = 263,
-     ELSE = 264,
-     WHILE = 265,
-     DECLARE = 266,
-     EQ = 267,
-     NEQ = 268,
-     LEQ = 269,
-     GEQ = 270
+     OBJLIST = 261,
+     KEY_INT = 262,
+     KEY_DOUBLE = 263,
+     KEY_BYTE = 264,
+     OBJECT = 265,
+     ALPHA = 266,
+     IF = 267,
+     ELSE = 268,
+     WHILE = 269,
+     DECLARE = 270,
+     EQ = 271,
+     NEQ = 272,
+     LEQ = 273,
+     GEQ = 274
    };
 #endif
 /* Tokens.  */
 #define INTEGER 258
 #define DOUBLE 259
 #define BYTE 260
-#define ALPHA 261
-#define OBJECT 262
-#define IF 263
-#define ELSE 264
-#define WHILE 265
-#define DECLARE 266
-#define EQ 267
-#define NEQ 268
-#define LEQ 269
-#define GEQ 270
+#define OBJLIST 261
+#define KEY_INT 262
+#define KEY_DOUBLE 263
+#define KEY_BYTE 264
+#define OBJECT 265
+#define ALPHA 266
+#define IF 267
+#define ELSE 268
+#define WHILE 269
+#define DECLARE 270
+#define EQ 271
+#define NEQ 272
+#define LEQ 273
+#define GEQ 274
 
 
 
@@ -87,7 +95,7 @@ typedef union YYSTYPE
 
 
 /* Line 2068 of yacc.c  */
-#line 91 "y.tab.h"
+#line 99 "y.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

@@ -393,7 +393,7 @@ static yyconst flex_int32_t yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    2,    4,    1,    1,    1,    1,    1,    5,    6,
-        6,    6,    6,    1,    6,    7,    6,    8,    8,    8,
+        6,    6,    6,    6,    6,    7,    6,    8,    8,    8,
         8,    8,    8,    8,    8,    8,    8,    6,    6,    9,
        10,   11,    1,    1,   12,   12,   12,   12,   12,   12,
        12,   12,   12,   12,   12,   12,   12,   12,   12,   12,
@@ -801,17 +801,17 @@ return DECLARE;
 case 5:
 YY_RULE_SETUP
 #line 30 "lexfile.l"
-return INTEGER;
+return KEY_INT;
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 32 "lexfile.l"
-return BYTE;
+return KEY_BYTE;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 34 "lexfile.l"
-return DOUBLE;	
+return KEY_DOUBLE;	
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
@@ -829,7 +829,7 @@ YY_RULE_SETUP
 #line 44 "lexfile.l"
 {
 				yylval.byte = yytext[1];
-				printf("%s\n",yytext);
+				//printf("%s\n",yytext);
 				return BYTE;	
 			}
 	YY_BREAK

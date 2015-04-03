@@ -1,13 +1,17 @@
  
 #include <stdio.h>      
 #include <map>
+#include <utility>
 #include <algorithm>
 #include <string>
 
 extern void yyerror(const char *);
+extern void yywarning(const char *);
+extern int yylineno;
 
 typedef enum  { Symbol,Constant,Operation,Block } NodeType;
-typedef std::map<std::string,int> Str_to_Int;
+typedef std::pair<int,int> Tuple;
+typedef std::map<std::string, Tuple > Str_to_Int;
 
 class SymbolTable
       {
@@ -15,22 +19,21 @@ class SymbolTable
             Str_to_Int Table;
             int index;
             SymbolTable() :index(1) {}
-            void AddSymbol( const char *ptr )
+            void AddSymbol(std::string str,int type )
             {
-                  std::string str(ptr);
                   if( Table.count(str) == 0 )  //Symbol doesnot exist
-                        Table[str] = index++;
+                        Table[str] = Tuple(index++,type);
                   else
                   {
                         str = "Multiple Declaration of symbol "+str;
                         yyerror(str.c_str());
                   }
             }
-            int FindSymbol( char *ptr )
+            Tuple FindSymbol( char *ptr )
             {
                   if(Table.count(ptr))
                         return Table[ptr];
-                  return -1;
+                  return Tuple(-1,0);
             }
             int size()
             {
@@ -46,7 +49,7 @@ class Node
 {
             public:
             NodeType type;
-            int expType;
+            int Return_Type;
             Node *left,*right;
             virtual int Process() =0;
 };
@@ -54,13 +57,14 @@ class Node
 class ConstantNode: public Node
             {                              
                   public:
-                  int value;
+                  double value;
                   int Process();
-                  ConstantNode(int v)
+                  ConstantNode(double v,int Rtype)
                   { 
                         type = Constant;
                         left = right = 0;
                         value = v;
+                        Return_Type = Rtype;
                   }
             };      
 
@@ -69,9 +73,10 @@ class SymbolNode: public Node
                   public:
                   std::string symbol;
                   int pos;
-                  SymbolNode( const char *i,int p ) :symbol(i),pos(p)
+                  SymbolNode( const char *i,Tuple p ) :symbol(i),pos(p.first)
                   { 
                         type = Symbol;
+                        Return_Type = p.second;
                         left = right = 0;
                   }
                   int Process();
@@ -103,15 +108,17 @@ class BlockNode:public Node
                   }
                   int Process();
                   Node *Array[100];
-                  void Add(Node *n)
+                  int LineNumber[100];
+                  void Add(Node *n,int lineno)
                   {
+                        LineNumber[size] = lineno;
                         Array[size++] = n;
                   }
             };
             
 Node *Create(Node *left,Node *right,int operation);
-Node *Create(int value,int type);
-Node *Create(const char *sym,int pos);
+Node *Create(double value,int type);
+Node *Create(const char *sym,Tuple pos);
 
 struct Stack
             {
@@ -132,27 +139,34 @@ struct Stack
                         size--;
                         return B[size];
                   }  
-                  void Add(Node *n)
+                  void Add(Node *n,int lineno)
                   {
-                        B[size-1]->Add(n);
+                        B[size-1]->Add(n,lineno);
                   }                
-                  void AddSymbol(char *sym)
+                  void AddSymbols(int type,Node *list)
                   {
-                        B[size-1]->sT.AddSymbol(sym);
+                        if( list == NULL) return;
+                        if( list->type == Symbol )
+                        {
+                              SymbolNode *sn = dynamic_cast<SymbolNode *>( list);
+                              B[size-1]->sT.AddSymbol(sn->symbol,type);
+                              return;
+                        }
+                        AddSymbols(type,list->left);
+                        AddSymbols(type,list->right);
                   }
-                  int FindSymbol(char *sym)
+                  
+                  Tuple FindSymbol(char *sym)
                   {
                         int offset = 0;
                         for(int i = size -1;i>=0;--i)
                         {
-                              int index = B[i]->sT.FindSymbol(sym);
-                              if( index == -1 )  offset += B[i]->sT.size(); //return id of stack from top
-                              else return offset+index; 
+                              Tuple index = B[i]->sT.FindSymbol(sym);
+                              if( index.first == -1 )  offset += B[i]->sT.size(); //return id of stack from top
+                              else return Tuple(offset+index.first,index.second); 
                         }
                         std::string str("Undeclared variable:");
                         str += sym;
                         yyerror(str.c_str());
                   }
             };
-
-extern int symbolTable[50];

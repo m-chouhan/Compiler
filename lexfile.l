@@ -27,11 +27,11 @@ alphanum [a-zA-Z]+[a-zA-Z0-9]+
 	 }
 "declare" return DECLARE;
 	
-"int"	return INTEGER;
+"int"	return KEY_INT;
 	
-"byte"  return BYTE;
+"byte"  return KEY_BYTE;
 
-"double" return DOUBLE;	
+"double" return KEY_DOUBLE;	
 
 {alpha}  {
 		//printf("\nLex\tAlphabet:%s\n",yytext);
@@ -43,7 +43,7 @@ alphanum [a-zA-Z]+[a-zA-Z0-9]+
 
 "'"[a-zA-Z0-9]"'"	{
 				yylval.byte = yytext[1];
-				printf("%s\n",yytext);
+				//printf("%s\n",yytext);
 				return BYTE;	
 			}
 
@@ -66,7 +66,7 @@ alphanum [a-zA-Z]+[a-zA-Z0-9]+
 ">="		return GEQ;	
 "<="		return LEQ;
 	
-[-+*/;()={}<>:]  {
+[-+*/,;()={}<>:]  {
 			return *yytext;
 		}
 
