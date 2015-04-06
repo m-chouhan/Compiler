@@ -17,31 +17,21 @@ void SymbolTable::Push()
       }
 }
 
-void SymbolTable::Pop()
-{
-      for(Str_to_Int::iterator it = Table.begin();it != Table.end();it++)
-      {
-            //out<<"Pop "<<it->first<<"\n";//key
-            it->second;//value
-      }
-}
-
-
-int ConstantNode::Process()
+int ConstantNode::Process(std::string str)
 {
       RegIndex++;
       out<<" "<<value<<" ";
       return RegIndex;
 }
 
-int SymbolNode::Process()
+int SymbolNode::Process(std::string str)
 {
       RegIndex++;
       out<<" "<<symbol<<" ";
       return RegIndex;      
 }
 
-int OperationNode::Process()
+int OperationNode::Process(std::string str)
 {
       switch(operation)
       {
@@ -49,111 +39,117 @@ int OperationNode::Process()
                         if( right->type == Block )
                         {
                               out<<"\nif (";
-                              int reg = left->Process();
+                              int reg = left->Process(str);
                               out<<" ) \n";
-                              right->Process();
+                              right->Process(str);
                               return 0;
                         }
                         else  //right is an else block
                         {
                               assert(right->type == Operation);
-                              out<<" \nif ( ";
-                              int reg = left->Process();
+                              out<<"\n"<<str<<" if ( ";
+                              int reg = left->Process(str);
                               out<<" ) \n";
-                              right->left->Process();
-                              out<<"\nelse \n";                              
-                              right->right->Process();
+                              right->left->Process(str);
+                              out<<"\n"<<str<<" else \n";                              
+                              right->right->Process(str);
                               return 0;
                         }
             case WHILE:
                          {     
                               int L = ++LableIndex; 
-                              out<<"\nwhile ( ";
-                              int reg2 = left->Process();  //This is Expression
+                              out<<" while ( ";
+                              int reg2 = left->Process(str);  //This is Expression
                               out<<")";
-                              int reg1 = right->Process(); //This is block
+                              int reg1 = right->Process(str); //This is block
                               return 0;
                         }
             case READ:
                         {
-                              out<<"\nscanf(\"%d\", &";right->Process();
+                              out<<" scanf(\"%d\", &";right->Process(str);
                               out<<")";
                               //~ assert(0);
                               return 0;
                         }
+            case PRINT:
+                        {
+                              out<<" printf(\"%d\",";right->Process(str);
+                              out<<")";
+                              return 0;
+                        }
             case '+':
                         {
-                              int reg1 = left->Process();
+                              int reg1 = left->Process(str);
                               out<<" + ";
-                              int reg2 = right->Process();
+                              int reg2 = right->Process(str);
                               RegIndex++;
                               return RegIndex;
                         }
             case '-':
                         {
-                              int reg1 = left->Process();
+                              int reg1 = left->Process(str);
                               out<<" - ";
-                              int reg2 = right->Process();
+                              int reg2 = right->Process(str);
                               RegIndex++;
                               return RegIndex;
                         }
             case '*':
                         {
-                              int reg1 = left->Process();
+                              int reg1 = left->Process(str);
                               out<<" * ";
-                              int reg2 = right->Process();
+                              int reg2 = right->Process(str);
                               RegIndex++;
                               return RegIndex;
                         }
             case '/':
                         {
-                              int reg1 = left->Process();
+                              int reg1 = left->Process(str);
                               out<<" / ";
-                              int reg2 = right->Process();
+                              int reg2 = right->Process(str);
                               RegIndex++;
                               return RegIndex;
                         }
                         
             case '=':
                         {
-                              int reg1 = left->Process();
+                              int reg1 = left->Process(str);
                               out<<" = ";
-                              int reg2 = right->Process();
+                              int reg2 = right->Process(str);
                               RegIndex++;
                               return RegIndex;
                         }     
             case EQ:
                         {
-                              int reg1 = left->Process();
+                              int reg1 = left->Process(str);
                               out<<" == ";
-                              int reg2 = right->Process();
+                              int reg2 = right->Process(str);
                               RegIndex++;
                               return RegIndex;
                         }     
 
             case NEQ:
                         {
-                              int reg1 = left->Process();
+                              int reg1 = left->Process(str);
                               out<<" != ";
-                              int reg2 = right->Process();
+                              int reg2 = right->Process(str);
                               RegIndex++;
                               return RegIndex;
                         }     
 
             case GEQ:
                         {
-                              int reg1 = left->Process();
+                              int reg1 = left->Process(str);
                               out<<" >= ";
-                              int reg2 = right->Process();
+                              int reg2 = right->Process(str);
                               RegIndex++;
                               return RegIndex;
                         }     
 
             case LEQ:
                         {
-                              int reg1 = left->Process();
+                              int reg1 = left->Process(str);
                               out<<" <= ";
-                              int reg2 = right->Process();
+                              int reg2 = right->Process(str);
                               RegIndex++;
                               return RegIndex;
                         }     
@@ -163,19 +159,18 @@ int OperationNode::Process()
       yyerror("Syntax/Semantic Error");
 }
 
-int BlockNode::Process()
+int BlockNode::Process(std::string str)
 {
       if( size == 0 ) return 0;
-      out<<"\n//~Block\n{\n";
-      sT.Push();
+      out<<"\n"<<str<<"{\n";
       for(int i = 0;i<size;++i)
       {
-            Array[i]->Process();
+            out<<str;
+            Array[i]->Process(str+"\t");
             out<<";\n";
             RegIndex = 0;
       }     
-      sT.Pop(); 
-      out<<"}\n";
+      out<<str<<"}\n";
       return 0;
 }
 

@@ -29,7 +29,7 @@ alpha [a-zA-Z]+
 		return DO;
 	 }
 "read"	{	
-		printf("Read Token\n");	
+		//printf("Read Token\n");	
 		return READ;
 	}
 "print" {
@@ -39,7 +39,7 @@ alpha [a-zA-Z]+
 		strcpy(buffer,yytext);
 		strtok(buffer," ");
 		strcpy(yylval.symbol,buffer);
-		printf("\nLex\tAlphabet:%s\n",yylval.symbol);
+		//printf("\nLex\tAlphabet:%s\n",yylval.symbol);
 		return ALPHA; 
 	 }
 {digits} { 	

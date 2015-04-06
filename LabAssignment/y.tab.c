@@ -469,8 +469,8 @@ static const yytype_int8 yyrhs[] =
 static const yytype_uint8 yyrline[] =
 {
        0,    40,    40,    47,    53,    58,    64,    65,    68,    73,
-      74,    80,    87,    93,    97,   103,   107,   110,   114,   115,
-     117,   120,   123,   126,   129,   132,   135,   138,   141
+      74,    80,    87,    93,    97,   103,   109,   112,   116,   117,
+     119,   122,   125,   128,   131,   134,   137,   140,   143
 };
 #endif
 
@@ -1446,7 +1446,7 @@ yyreduce:
 #line 40 "yaccFile.y"
     {
 						printf("\nEND\n");
-						St.B[0]->Process();	
+						St.Process();	
 						//$1->Process();
 					}
     break;
@@ -1553,13 +1553,15 @@ yyreduce:
 /* Line 1806 of yacc.c  */
 #line 103 "yaccFile.y"
     {
+						(yyval.nptr) = Create(0,(yyvsp[(2) - (3)].nptr),PRINT);
+						St.Add((yyval.nptr));	
 					}
     break;
 
   case 16:
 
 /* Line 1806 of yacc.c  */
-#line 107 "yaccFile.y"
+#line 109 "yaccFile.y"
     { 
 						(yyval.nptr) = Create((yyvsp[(1) - (1)].ivalue),INTEGER);		
 					}
@@ -1568,7 +1570,7 @@ yyreduce:
   case 17:
 
 /* Line 1806 of yacc.c  */
-#line 110 "yaccFile.y"
+#line 112 "yaccFile.y"
     {
 						St.AddSymbol((yyvsp[(1) - (1)].symbol));
 						(yyval.nptr) = Create((yyvsp[(1) - (1)].symbol));
@@ -1578,14 +1580,14 @@ yyreduce:
   case 18:
 
 /* Line 1806 of yacc.c  */
-#line 114 "yaccFile.y"
+#line 116 "yaccFile.y"
     { 	(yyval.nptr) = (yyvsp[(2) - (3)].nptr);	}
     break;
 
   case 19:
 
 /* Line 1806 of yacc.c  */
-#line 115 "yaccFile.y"
+#line 117 "yaccFile.y"
     {
 					}
     break;
@@ -1593,7 +1595,7 @@ yyreduce:
   case 20:
 
 /* Line 1806 of yacc.c  */
-#line 117 "yaccFile.y"
+#line 119 "yaccFile.y"
     { 
 						(yyval.nptr) = Create((yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr),'+');		
 					}
@@ -1602,7 +1604,7 @@ yyreduce:
   case 21:
 
 /* Line 1806 of yacc.c  */
-#line 120 "yaccFile.y"
+#line 122 "yaccFile.y"
     { 
 						(yyval.nptr) = Create((yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr),'-');		
 					}
@@ -1611,7 +1613,7 @@ yyreduce:
   case 22:
 
 /* Line 1806 of yacc.c  */
-#line 123 "yaccFile.y"
+#line 125 "yaccFile.y"
     { 
 						(yyval.nptr) = Create((yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr),'*');		
 					}
@@ -1620,7 +1622,7 @@ yyreduce:
   case 23:
 
 /* Line 1806 of yacc.c  */
-#line 126 "yaccFile.y"
+#line 128 "yaccFile.y"
     { 
 						(yyval.nptr) = Create((yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr),'/');		
 					}
@@ -1629,7 +1631,7 @@ yyreduce:
   case 24:
 
 /* Line 1806 of yacc.c  */
-#line 129 "yaccFile.y"
+#line 131 "yaccFile.y"
     {
 						(yyval.nptr) = Create((yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr),NEQ);		
 					}
@@ -1638,7 +1640,7 @@ yyreduce:
   case 25:
 
 /* Line 1806 of yacc.c  */
-#line 132 "yaccFile.y"
+#line 134 "yaccFile.y"
     {
 						(yyval.nptr) = Create((yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr),EQ);		
 					}
@@ -1647,7 +1649,7 @@ yyreduce:
   case 26:
 
 /* Line 1806 of yacc.c  */
-#line 135 "yaccFile.y"
+#line 137 "yaccFile.y"
     {
 						(yyval.nptr) = Create((yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr),GEQ);		
 					}
@@ -1656,7 +1658,7 @@ yyreduce:
   case 27:
 
 /* Line 1806 of yacc.c  */
-#line 138 "yaccFile.y"
+#line 140 "yaccFile.y"
     {
 						(yyval.nptr) = Create((yyvsp[(1) - (3)].nptr),(yyvsp[(3) - (3)].nptr),LEQ);		
 					}
@@ -1665,7 +1667,7 @@ yyreduce:
   case 28:
 
 /* Line 1806 of yacc.c  */
-#line 141 "yaccFile.y"
+#line 143 "yaccFile.y"
     {
 						St.AddSymbol((yyvsp[(1) - (3)].symbol)); 
 						Node *ptr = Create((yyvsp[(1) - (3)].symbol));
@@ -1676,7 +1678,7 @@ yyreduce:
 
 
 /* Line 1806 of yacc.c  */
-#line 1680 "y.tab.c"
+#line 1682 "y.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1907,7 +1909,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 148 "yaccFile.y"
+#line 150 "yaccFile.y"
 
 
 void yyerror(const char *ch)

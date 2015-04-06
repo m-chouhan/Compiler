@@ -158,7 +158,51 @@ int OperationNode::Process()
                               int reg2 = left->Process();
                               Return_Type = TypeCheck(left->Return_Type,right->Return_Type);
                               RegIndex++;
-                              out<<"DIV "<<RegIndex<<StrType(Return_Type)
+                              out<<"DIV R"<<RegIndex<<StrType(Return_Type)
+                                    <<" , R"<<reg1<<StrType(right->Return_Type)
+                                    <<" , R"<<reg2<<StrType(left->Return_Type)<<" ;\n";
+                              return RegIndex;
+                        }
+            case '>':
+                        {
+                              int reg1 = right->Process();
+                              int reg2 = left->Process();
+                              Return_Type = BYTE;
+                              RegIndex++;
+                              out<<"CMP R"<<RegIndex<<StrType(Return_Type)
+                                    <<" , R"<<reg1<<StrType(right->Return_Type)
+                                    <<" , R"<<reg2<<StrType(left->Return_Type)<<" ;\n";
+                              return RegIndex;
+                        }
+            case '<':
+                        {
+                              int reg1 = right->Process();
+                              int reg2 = left->Process();
+                              Return_Type = BYTE;
+                              RegIndex++;
+                              out<<"CMP R"<<RegIndex<<StrType(Return_Type)
+                                    <<" , R"<<reg2<<StrType(left->Return_Type)
+                                    <<" , R"<<reg1<<StrType(right->Return_Type)<<" ;\n";
+                              return RegIndex;
+                        }
+            case LEQ:
+                        {
+                              int reg1 = right->Process();
+                              int reg2 = left->Process();
+                              Return_Type = BYTE;
+                              RegIndex++;
+                              out<<"CMP R"<<RegIndex<<StrType(Return_Type)
+                                    <<" , R"<<reg1<<StrType(right->Return_Type)
+                                    <<" , R"<<reg2<<StrType(left->Return_Type)<<" ;\n";
+                              return RegIndex;
+                        }
+            case GEQ:
+                        {
+                              int reg1 = right->Process();
+                              int reg2 = left->Process();
+                              Return_Type = BYTE;
+                              RegIndex++;
+                              out<<"CMP R"<<RegIndex<<StrType(Return_Type)
                                     <<" , R"<<reg1<<StrType(right->Return_Type)
                                     <<" , R"<<reg2<<StrType(left->Return_Type)<<" ;\n";
                               return RegIndex;
@@ -179,7 +223,30 @@ int OperationNode::Process()
                               <<" , mem["<<sN->symbol<<" , "<<p<<","<<StrType(left->Return_Type)<<"] ;\n";
                               return reg1;                              
                         }     
+            case EQ:
+                        {
+                              int reg1 = right->Process();
+                              int reg2 = left->Process();
+                              Return_Type = BYTE;
+                              RegIndex++;
+                              out<<"EQ "<<RegIndex<<StrType(Return_Type)
+                                    <<" , R"<<reg1<<StrType(right->Return_Type)
+                                    <<" , R"<<reg2<<StrType(left->Return_Type)<<" ;\n";
+                              return RegIndex;
+                        }
+            case NEQ:
+                        {
+                              int reg1 = right->Process();
+                              int reg2 = left->Process();
+                              Return_Type = BYTE;
+                              RegIndex++;
+                              out<<"NEQ "<<RegIndex<<StrType(Return_Type)
+                                    <<" , R"<<reg1<<StrType(right->Return_Type)
+                                    <<" , R"<<reg2<<StrType(left->Return_Type)<<" ;\n";
+                              return RegIndex;
+                        }
       }
+      
       yyerror("Syntax/Semantic Error");
 }
 

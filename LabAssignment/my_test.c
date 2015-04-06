@@ -1,11 +1,16 @@
 
+	z = x + 1;
 	read Y ;
 	asd = (90+7);
-
-	while (aX == 100) do
+	aX = 10;
+	while (aX <= 100) do
 	{
-		print X;
-		X = X + 1;
+		print Y;
+		if( x = 1 )
+		{
+			x;
+		}
+		aX = aX + 1;
 	}
 
 

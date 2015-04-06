@@ -800,7 +800,7 @@ case 6:
 YY_RULE_SETUP
 #line 31 "lexfile.l"
 {	
-		printf("Read Token\n");	
+		//printf("Read Token\n");	
 		return READ;
 	}
 	YY_BREAK
@@ -818,7 +818,7 @@ YY_RULE_SETUP
 		strcpy(buffer,yytext);
 		strtok(buffer," ");
 		strcpy(yylval.symbol,buffer);
-		printf("\nLex\tAlphabet:%s\n",yylval.symbol);
+		//printf("\nLex\tAlphabet:%s\n",yylval.symbol);
 		return ALPHA; 
 	 }
 	YY_BREAK

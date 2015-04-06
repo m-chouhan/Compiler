@@ -3,7 +3,9 @@
 #include <map>
 #include <algorithm>
 #include <string>
+#include <fstream>
 
+extern std::ofstream out;
 extern void yyerror(const char *);
 
 typedef enum  { Symbol,Constant,Operation,Block } NodeType;
@@ -20,25 +22,8 @@ class SymbolTable
                   std::string str(ptr);
                   if( Table.count(str) == 0 )  //Symbol doesnot exist
                         Table[str] = index++;
-                  else
-                  {
-                        str = "Multiple Declaration of symbol "+str;
-                        //~ yyerror(str.c_str());
-                  }
-            }
-            int FindSymbol( char *ptr )
-            {
-                  if(Table.count(ptr))
-                        return Table[ptr];
-                  return -1;
-            }
-            int size()
-            {
-                  return Table.size();
             }
             void Push();
-            void Pop();
-            
       };
 
 class Node
@@ -46,14 +31,14 @@ class Node
             public:
             NodeType type;
             Node *left,*right;
-            virtual int Process() =0;
+            virtual int Process(std::string str) =0;
 };
 
 class ConstantNode: public Node
             {                              
                   public:
                   int value;
-                  int Process();
+                  int Process(std::string str);
                   ConstantNode(int v)
                   { 
                         type = Constant;
@@ -71,14 +56,14 @@ class SymbolNode: public Node
                         type = Symbol;
                         left = right = 0;
                   }
-                  int Process();
+                  int Process(std::string str);
             };
                   
 class OperationNode:public Node 
             {
                   public:
                   int operation;
-                  int Process();
+                  int Process(std::string str);
                   OperationNode(int opr,Node *l,Node *r) 
                   { 
                         type = Operation;
@@ -91,14 +76,13 @@ class BlockNode:public Node
             {
                   public:
                   int size;
-                  SymbolTable sT;
                   BlockNode() 
                   {
                         type = Block;
                         left = right = 0;
                         size = 0;
                   }
-                  int Process();
+                  int Process(std::string str);
                   Node *Array[100];
                   void Add(Node *n)
                   {
@@ -114,6 +98,15 @@ struct Stack
             {
                   public:
                   BlockNode *B[100];
+                  SymbolTable sT;
+                  void Process()
+                  {
+                        out<<"#include <stdio.h>\n\n"
+                              <<" void main() \n{\n";
+                        sT.Push();
+                        B[0]->Process("\t");
+                        out<<"\n}";
+                  }
                   int size;
                   Stack() 
                   { 
@@ -135,19 +128,6 @@ struct Stack
                   }                
                   void AddSymbol(char *sym)
                   {
-                        B[size-1]->sT.AddSymbol(sym);
-                  }
-                  int FindSymbol(char *sym)
-                  {
-                        int offset = 0;
-                        for(int i = size -1;i>=0;--i)
-                        {
-                              int index = B[i]->sT.FindSymbol(sym);
-                              if( index == -1 )  offset += B[i]->sT.size(); //return id of stack from top
-                              else return offset+index; 
-                        }
-                        std::string str("Undeclared variable:");
-                        str += sym;
-                        //~ yyerror(str.c_str());
+                        sT.AddSymbol(sym);
                   }
             };

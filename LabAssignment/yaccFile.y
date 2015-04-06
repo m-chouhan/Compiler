@@ -39,7 +39,7 @@
 start:
 	statements			{
 						printf("\nEND\n");
-						St.B[0]->Process();	
+						St.Process();	
 						//$1->Process();
 					}
 	;
@@ -101,6 +101,8 @@ statement:
 						St.Add($$);	
 					}
 		|PRINT expr ';'		{
+						$$ = Create(0,$2,PRINT);
+						St.Add($$);	
 					}
 		;
 expr:
