@@ -7,7 +7,7 @@ push rbx
 ;Block
 push		RBP
 mov		RBP,RSP
-sub		RSP,32;	Allocating variables
+sub		RSP,24;	Allocating variables
 mov		rbx, 1	; #Integer# 
 mov		[RBP-8],rbx;	 #Integer#  , [x , 1,undef] ;
 mov		rbx, [RBP-8]	;undef
@@ -19,7 +19,25 @@ mov 		rsi,rbx
 mov		rdi,format
 xor		rbx,rbx
 call		printf
-add		RSP,32;	Popping Variables
+mov		rbx, [RBP-8]	;undef
+jz ELSE1
+
+;Block
+push		RBP
+mov		RBP,RSP
+sub		RSP,8;	Allocating variables
+mov		rbx, 1	; #Integer# 
+mov		[RBP-8],rbx;	 #Integer#  , [x , 1,undef] ;
+mov		rbx, [RBP-8]	;undef
+mov 		rsi,rbx
+mov		rdi,format
+xor		rbx,rbx
+call		printf
+add		RSP,8;	Popping Variables
+pop		RBP
+
+ELSE1:
+add		RSP,24;	Popping Variables
 pop		RBP
 
 pop rbx

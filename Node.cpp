@@ -25,14 +25,10 @@ std::string StrType(int type)
 
 void SymbolTable::Push()
 {
+	  if(Table.size())
 	  out<<"push		RBP\n"	
 		 <<"mov		RBP,RSP\n"
 		 <<"sub		RSP,"<<Table.size()*8<<";	Allocating variables\n";	
-      //~ for(Str_to_Int::iterator it = Table.begin();it != Table.end();it++)
-      //~ {
-            //~ out<<"push		rbx\n";//key
-            //~ //value
-      //~ }
 }
 
 void SymbolTable::Pop()
@@ -42,8 +38,9 @@ void SymbolTable::Pop()
             //~ out<<"pop		rbx\n";//key
             //~ it->second;//value
       //~ }
-      out<<"add		RSP,"<<Table.size()*8<<";	Popping Variables\n";
-      out<<"pop		RBP\n";
+      if(Table.size())
+      out<<"add		RSP,"<<Table.size()*8<<";	Popping Variables\n"
+		<<"pop		RBP\n";
 }
 
 bool IsSubtype(int t1,int t2)
