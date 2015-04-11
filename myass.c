@@ -1,10 +1,9 @@
 declare int x,y,z;
-x = 1;
+x = 10;
 print 3+x;
-if(x)
+while(x)
 {
-	declare int x;
-	x = 1;
+	x = x - 1;
 	print x;
 }
 

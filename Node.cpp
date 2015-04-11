@@ -101,7 +101,8 @@ int OperationNode::Process()
                         {
                               int reg = left->Process();
                               int L = ++LableIndex;
-                              out<<"jz ELSE"<<L<<"\n";
+                              out<<"cmp		rbx,0\n"
+								<<"jz ELSE"<<L<<"\n";
                               right->Process();
                               out<<"ELSE"<<L<<":\n";
                               return 0;
@@ -111,23 +112,28 @@ int OperationNode::Process()
                               assert(right->type == Operation);
                               int reg = left->Process();
                               int L1 = ++LableIndex;
-                              int L2 = ++LableIndex;
-                              
-                              out<<"jz ELSE"<<L1<<"\n";
+                              //~ int L2 = ++LableIndex;
+                              out<<"cmp		rbx,0\n"
+								<<"jz ELSE"<<L1<<"\n";
                               right->left->Process();
-                              out<<"jmp IF"<<L2<<"\n";
+                              out<<"jmp IF"<<L1<<"\n";
                               out<<"ELSE"<<L1<<":\n";                              
                               right->right->Process();
-                              out<<"IF"<<L2<<": \n";
+                              out<<"IF"<<L1<<": \n";
                               return 0;
                         }
             case WHILE:
                          {     
                               int L = ++LableIndex; 
                               out<<"LOOP"<<L<<": \n";
-                              int reg1 = right->Process(); //This is block
+                              
                               int reg2 = left->Process();  //This is Expression
-                              out<<"BEQZ R"<<reg2<<" , "<<"LOOP"<<L<<"\n";
+                              out<<"cmp		rbx,0\n"
+								<<"jz EXIT_LOOP"<<L<<"\n";
+							  int reg1 = right->Process(); //This is block
+                              out<<"jmp LOOP"<<L<<"\n";
+                              
+                              out<<"EXIT_LOOP"<<L<<":\n";
                               return 0;
                         }
             case '+':
