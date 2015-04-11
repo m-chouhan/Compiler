@@ -10,6 +10,7 @@
 	using namespace std;
 	int id;
 	Stack St;
+	extern ofstream out;
 %}
 
 %union{
@@ -29,7 +30,7 @@
 %token <ivalue> KEY_INT KEY_DOUBLE KEY_BYTE OBJECT
 %token <symbol> ALPHA
 %token IF ELSE WHILE
-%token DECLARE
+%token DECLARE	PRINT
 %token EQ NEQ LEQ GEQ
 
 %type <nptr> expr statement statements objlist
@@ -46,7 +47,8 @@
 start:
 	statements			{
 						printf("\nEND\n");
-						St.B[0]->Process();	
+						
+						St.Process();	
 						//$1->Process();
 					}
 	;
@@ -109,6 +111,10 @@ statement:
 		|block			{
 						if($1->size > 0);
 							St.Add($1,yylineno);
+					}
+		|PRINT expr ';'		{
+						$$ = Create(0,$2,PRINT);
+						St.Add($$,yylineno);
 					}
 		;
 expr:

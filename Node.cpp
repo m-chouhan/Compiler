@@ -25,9 +25,10 @@ std::string StrType(int type)
 
 void SymbolTable::Push()
 {
+	  out<<"mov		rbx,0\n";
       for(Str_to_Int::iterator it = Table.begin();it != Table.end();it++)
       {
-            out<<"Push "<<it->first<<StrType(it->second.second)<<";\n";//key
+            out<<"push		rbx\n";//key
             //value
       }
 }
@@ -36,7 +37,7 @@ void SymbolTable::Pop()
 {
       for(Str_to_Int::iterator it = Table.begin();it != Table.end();it++)
       {
-            out<<"Pop "<<it->first<<";\n";//key
+            out<<"pop		rbx\n";//key
             it->second;//value
       }
 }
@@ -70,14 +71,14 @@ int TypeCheck(int t1,int t2)
 int ConstantNode::Process()
 {
       RegIndex++;
-      out<<"Load  R"<<RegIndex<<" , "<<value<<StrType(Return_Type)<<";\n";
+      out<<"mov		rbx, "<<value<<"	;"<<StrType(Return_Type)<<"\n";
       return RegIndex;
 }
 
 int SymbolNode::Process()
 {
       RegIndex++;
-      out<<"Load  R"<<RegIndex<<" , "<<"mem["<<symbol<<","<<pos<<","<<StrType(Return_Type)<<"];\n";
+      out<<"mov		rbx, [RSP+"<<pos*8<<"]	;"<<StrType(Return_Type)<<"\n";
       return RegIndex;      
 }
 
@@ -85,12 +86,21 @@ int OperationNode::Process()
 {
       switch(operation)
       {
+			case PRINT:
+						{
+							right->Process();
+							out <<"mov 		rsi,rbx\n"
+								<<"mov		rdi,format\n"
+								<<"xor		rbx,rbx\n"
+								<<"call		printf\n";
+							return 0;	
+						}
             case IF:
                         if( right->type == Block )
                         {
                               int reg = left->Process();
                               int L = ++LableIndex;
-                              out<<"BEQZ R"<<reg<<" , "<<"ELSE"<<L<<"\n";
+                              out<<"jz ELSE"<<L<<"\n";
                               right->Process();
                               out<<"ELSE"<<L<<":\n";
                               return 0;
@@ -122,23 +132,29 @@ int OperationNode::Process()
             case '+':
                         {
                               int reg1 = right->Process();
+                              
+                              out<<"push\t\trbx\n";
+                              
                               int reg2 = left->Process();
+                              
                               Return_Type = TypeCheck(left->Return_Type,right->Return_Type);                              
                               RegIndex++;
-                              out<<"ADD R"<<RegIndex<<StrType(Return_Type)
-                                    <<" , R"<<reg1<<StrType(right->Return_Type)
-                                    <<" , R"<<reg2<<StrType(left->Return_Type)<<" ;\n";
+                              out<<"add		rbx,[RSP]	;\n";
+                              out<<"add		RSP,8		;\n";
                               return RegIndex;
                         }
             case '-':
                         {
                               int reg1 = right->Process();
+                              
+                              out<<"push\t\trbx\n";
+                              
                               int reg2 = left->Process();
-                              Return_Type = TypeCheck(left->Return_Type,right->Return_Type);
+                              
+                              Return_Type = TypeCheck(left->Return_Type,right->Return_Type);                              
                               RegIndex++;
-                              out<<"SUB R"<<RegIndex<<StrType(Return_Type)
-                                    <<" , R"<<reg1<<StrType(right->Return_Type)
-                                    <<" , R"<<reg2<<StrType(left->Return_Type)<<" ;\n";
+                              out<<"sub		rbx,[RSP]	;\n";
+                              out<<"add		RSP,8		;\n";
                               return RegIndex;
                         }
             case '*':
@@ -253,7 +269,7 @@ int OperationNode::Process()
 int BlockNode::Process()
 {
       if( size == 0 ) return 0;
-      out<<"\n#Block\n";
+      out<<"\n;Block\n";
       sT.Push();
       for(int i = 0;i<size;++i)
       {
@@ -262,7 +278,7 @@ int BlockNode::Process()
             RegIndex = 0;
       }     
       sT.Pop(); 
-      out<<"#\n";
+      out<<"\n";
       return 0;
 }
 

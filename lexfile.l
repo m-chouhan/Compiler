@@ -26,6 +26,8 @@ alphanum [a-zA-Z]+[a-zA-Z0-9]+
 		return WHILE; 
 	 }
 "declare" return DECLARE;
+
+"print"	  return PRINT;
 	
 "int"	return KEY_INT;
 	

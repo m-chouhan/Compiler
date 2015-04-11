@@ -4,10 +4,12 @@
 #include <utility>
 #include <algorithm>
 #include <string>
+#include <fstream>
 
 extern void yyerror(const char *);
 extern void yywarning(const char *);
 extern int yylineno;
+extern std::ofstream out;
 
 typedef enum  { Symbol,Constant,Operation,Block } NodeType;
 typedef std::pair<int,int> Tuple;
@@ -155,7 +157,18 @@ struct Stack
                         AddSymbols(type,list->left);
                         AddSymbols(type,list->right);
                   }
-                  
+				  void Process()
+				  {
+						out<<"        global  main\n"
+						   <<"\textern  printf\n"
+						   <<"        section .text\n"
+						   <<"main:\npush rbx\n";
+						B[0]->Process();
+						out<<"pop rbx\nret\n"
+						   <<"format:\n"
+						   <<"        db \"%d\", 10 , 0\n";
+						
+				  }
                   Tuple FindSymbol(char *sym)
                   {
                         int offset = 0;
