@@ -167,7 +167,7 @@ struct Stack
 						out<<"pop rbx\nret\n"
 						   <<"format:\n"
 						   <<"        db \"%d\", 10 , 0\n";
-						
+						out.close();
 				  }
                   Tuple FindSymbol(char *sym)
                   {

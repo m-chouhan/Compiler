@@ -19,6 +19,7 @@ static const char yysccsid[] = "@(#)yaccpar	1.9 (Berkeley) 02/21/93";
 #line 2 "yaccFile.y"
 	#include <iostream>
 	#include <stdio.h>
+	#include <stdlib.h>
 	#include <vector>
 	#include "NodeHeader2.h"
 	extern int yylineno;
@@ -29,7 +30,7 @@ static const char yysccsid[] = "@(#)yaccpar	1.9 (Berkeley) 02/21/93";
 	int id;
 	Stack St;
 	extern ofstream out;
-#line 16 "yaccFile.y"
+#line 17 "yaccFile.y"
 #ifdef YYSTYPE
 #undef  YYSTYPE_IS_DECLARED
 #define YYSTYPE_IS_DECLARED 1
@@ -45,7 +46,7 @@ typedef union{
 	class BlockNode *bptr;
 } YYSTYPE;
 #endif /* !YYSTYPE_IS_DECLARED */
-#line 48 "y.tab.c"
+#line 49 "y.tab.c"
 
 /* compatibility with bison */
 #ifdef YYPARSE_PARAM
@@ -306,7 +307,7 @@ typedef struct {
 } YYSTACKDATA;
 /* variables for the parser stack */
 static YYSTACKDATA yystack;
-#line 169 "yaccFile.y"
+#line 171 "yaccFile.y"
 
 void yyerror(const char *ch)
 {
@@ -324,7 +325,7 @@ int main()
 	return 0;
 }
 
-#line 327 "y.tab.c"
+#line 328 "y.tab.c"
 
 #if YYDEBUG
 #include <stdio.h>		/* needed for printf */
@@ -531,49 +532,50 @@ yyreduce:
     switch (yyn)
     {
 case 1:
-#line 48 "yaccFile.y"
+#line 49 "yaccFile.y"
 	{
 						printf("\nEND\n");
 						
-						St.Process();	
-						/*$1->Process();*/
+						St.Process();
+						system("nasm -felf64 Assembly.asm");	
+						system("gcc Assembly.o");	
 					}
 break;
 case 2:
-#line 56 "yaccFile.y"
+#line 58 "yaccFile.y"
 	{ 
 						yyval.bptr = St.Pop();
 						/*printf("{}->"); */
 					}
 break;
 case 3:
-#line 62 "yaccFile.y"
+#line 64 "yaccFile.y"
 	{
 						St.Push();
 					}
 break;
 case 5:
-#line 70 "yaccFile.y"
+#line 72 "yaccFile.y"
 	{yyval.ivalue = INTEGER; }
 break;
 case 6:
-#line 71 "yaccFile.y"
+#line 73 "yaccFile.y"
 	{yyval.ivalue = DOUBLE; }
 break;
 case 7:
-#line 72 "yaccFile.y"
+#line 74 "yaccFile.y"
 	{yyval.ivalue = BYTE; }
 break;
 case 8:
-#line 75 "yaccFile.y"
+#line 77 "yaccFile.y"
 	{ yyval.nptr = Create(Create(yystack.l_mark[-2].symbol,Tuple(0,0)),yystack.l_mark[0].nptr,OBJLIST);}
 break;
 case 9:
-#line 76 "yaccFile.y"
+#line 78 "yaccFile.y"
 	{ yyval.nptr = Create(yystack.l_mark[0].symbol,Tuple(0,0)); }
 break;
 case 12:
-#line 83 "yaccFile.y"
+#line 85 "yaccFile.y"
 	{ 
 						yyval.nptr = yystack.l_mark[-1].nptr;
 					 	St.Add(yystack.l_mark[-1].nptr,yylineno);
@@ -581,7 +583,7 @@ case 12:
 					}
 break;
 case 14:
-#line 89 "yaccFile.y"
+#line 91 "yaccFile.y"
 	{ 
 						yyval.nptr = Create(yystack.l_mark[-1].nptr,yystack.l_mark[0].bptr,IF);
 						/*printf("IF{}\n");*/
@@ -590,7 +592,7 @@ case 14:
 					}
 break;
 case 15:
-#line 95 "yaccFile.y"
+#line 97 "yaccFile.y"
 	{
 							Node *ptr = Create(yystack.l_mark[-2].bptr,yystack.l_mark[0].bptr,ELSE);
 							yyval.nptr = Create(yystack.l_mark[-3].nptr,ptr,IF); 
@@ -599,7 +601,7 @@ case 15:
 						}
 break;
 case 16:
-#line 102 "yaccFile.y"
+#line 104 "yaccFile.y"
 	{ 
 						yyval.nptr = Create(yystack.l_mark[-1].nptr,yystack.l_mark[0].bptr,WHILE);
 						St.Add(yyval.nptr,yylineno);
@@ -607,119 +609,119 @@ case 16:
 					}
 break;
 case 17:
-#line 108 "yaccFile.y"
+#line 110 "yaccFile.y"
 	{
 							St.AddSymbols(yystack.l_mark[-2].ivalue,yystack.l_mark[-1].nptr);
 						}
 break;
 case 18:
-#line 111 "yaccFile.y"
+#line 113 "yaccFile.y"
 	{
 						if(yystack.l_mark[0].bptr->size > 0);
 							St.Add(yystack.l_mark[0].bptr,yylineno);
 					}
 break;
 case 19:
-#line 115 "yaccFile.y"
+#line 117 "yaccFile.y"
 	{
 						yyval.nptr = Create(0,yystack.l_mark[-1].nptr,PRINT);
 						St.Add(yyval.nptr,yylineno);
 					}
 break;
 case 20:
-#line 121 "yaccFile.y"
+#line 123 "yaccFile.y"
 	{ 
 						yyval.nptr = Create(yystack.l_mark[0].ivalue,INTEGER);		
 					}
 break;
 case 21:
-#line 124 "yaccFile.y"
+#line 126 "yaccFile.y"
 	{
 						Tuple pos = St.FindSymbol(yystack.l_mark[0].symbol); 
 						yyval.nptr = Create(yystack.l_mark[0].symbol,pos);
 					}
 break;
 case 22:
-#line 128 "yaccFile.y"
+#line 130 "yaccFile.y"
 	{	yyval.nptr = Create(yystack.l_mark[0].dvalue,DOUBLE);}
 break;
 case 23:
-#line 129 "yaccFile.y"
+#line 131 "yaccFile.y"
 	{	yyval.nptr = Create(yystack.l_mark[0].byte,BYTE);  }
 break;
 case 24:
-#line 130 "yaccFile.y"
+#line 132 "yaccFile.y"
 	{ 	yyval.nptr = yystack.l_mark[-1].nptr;	}
 break;
 case 25:
-#line 131 "yaccFile.y"
+#line 133 "yaccFile.y"
 	{ 
 						yyval.nptr = Create(yystack.l_mark[-2].nptr,yystack.l_mark[0].nptr,'+');		
 					}
 break;
 case 26:
-#line 134 "yaccFile.y"
+#line 136 "yaccFile.y"
 	{ 
 						yyval.nptr = Create(yystack.l_mark[-2].nptr,yystack.l_mark[0].nptr,'-');		
 					}
 break;
 case 27:
-#line 137 "yaccFile.y"
+#line 139 "yaccFile.y"
 	{ 
 						yyval.nptr = Create(yystack.l_mark[-2].nptr,yystack.l_mark[0].nptr,'*');		
 					}
 break;
 case 28:
-#line 140 "yaccFile.y"
+#line 142 "yaccFile.y"
 	{ 
 						yyval.nptr = Create(yystack.l_mark[-2].nptr,yystack.l_mark[0].nptr,'/');		
 					}
 break;
 case 29:
-#line 143 "yaccFile.y"
+#line 145 "yaccFile.y"
 	{ 
 						yyval.nptr = Create(yystack.l_mark[-2].nptr,yystack.l_mark[0].nptr,'/');		
 					}
 break;
 case 30:
-#line 146 "yaccFile.y"
+#line 148 "yaccFile.y"
 	{ 
 						yyval.nptr = Create(yystack.l_mark[-2].nptr,yystack.l_mark[0].nptr,'/');		
 					}
 break;
 case 31:
-#line 149 "yaccFile.y"
+#line 151 "yaccFile.y"
 	{ 
 						yyval.nptr = Create(yystack.l_mark[-2].nptr,yystack.l_mark[0].nptr,'/');		
 					}
 break;
 case 32:
-#line 152 "yaccFile.y"
+#line 154 "yaccFile.y"
 	{ 
 						yyval.nptr = Create(yystack.l_mark[-2].nptr,yystack.l_mark[0].nptr,'/');		
 					}
 break;
 case 33:
-#line 155 "yaccFile.y"
+#line 157 "yaccFile.y"
 	{ 
 						yyval.nptr = Create(yystack.l_mark[-2].nptr,yystack.l_mark[0].nptr,'/');		
 					}
 break;
 case 34:
-#line 158 "yaccFile.y"
+#line 160 "yaccFile.y"
 	{ 
 						yyval.nptr = Create(yystack.l_mark[-2].nptr,yystack.l_mark[0].nptr,'/');		
 					}
 break;
 case 35:
-#line 161 "yaccFile.y"
+#line 163 "yaccFile.y"
 	{
 						Tuple pos = St.FindSymbol(yystack.l_mark[-2].symbol); 
 						Node *ptr = Create(yystack.l_mark[-2].symbol,pos);
 						yyval.nptr = Create(ptr,yystack.l_mark[0].nptr,'=');		
 					}
 break;
-#line 722 "y.tab.c"
+#line 724 "y.tab.c"
     }
     yystack.s_mark -= yym;
     yystate = *yystack.s_mark;

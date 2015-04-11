@@ -25,22 +25,21 @@ std::string StrType(int type)
 
 void SymbolTable::Push()
 {
-	  if(Table.size())
-	  out<<"push		RBP\n"	
-		 <<"mov		RBP,RSP\n"
-		 <<"sub		RSP,"<<Table.size()*8<<";	Allocating variables\n";	
+	if(!Table.size()) return;
+	
+	int sz = (Table.size()%2) ? Table.size() : Table.size()+1;
+	out<<"push		RBP\n"	
+	 <<"mov		RBP,RSP\n"
+	 <<"sub		RSP,"<<sz*8<<";	Allocating variables\n";	
 }
 
 void SymbolTable::Pop()
 {
-      //~ for(Str_to_Int::iterator it = Table.begin();it != Table.end();it++)
-      //~ {
-            //~ out<<"pop		rbx\n";//key
-            //~ it->second;//value
-      //~ }
-      if(Table.size())
-      out<<"add		RSP,"<<Table.size()*8<<";	Popping Variables\n"
-		<<"pop		RBP\n";
+	if(!Table.size()) return;
+	int sz = (Table.size()%2) ? Table.size() : Table.size()+1;
+	
+	out<<"add		RSP,"<<sz*8<<";	Popping Variables\n"
+	<<"pop		RBP\n";
 }
 
 bool IsSubtype(int t1,int t2)
@@ -112,7 +111,6 @@ int OperationNode::Process()
                               assert(right->type == Operation);
                               int reg = left->Process();
                               int L1 = ++LableIndex;
-                              //~ int L2 = ++LableIndex;
                               out<<"cmp		rbx,0\n"
 								<<"jz ELSE"<<L1<<"\n";
                               right->left->Process();

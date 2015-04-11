@@ -25,7 +25,7 @@ cmp		rbx,0
 jz EXIT_LOOP1
 
 ;Block
-mov		rbx, 1	; #Integer# 
+mov		rbx, 2	; #Integer# 
 push		rbx
 mov		rbx, [RBP-8]	;undef
 sub		rbx,[RSP]	;

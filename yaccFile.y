@@ -1,6 +1,7 @@
 %{
 	#include <iostream>
 	#include <stdio.h>
+	#include <stdlib.h>
 	#include <vector>
 	#include "NodeHeader2.h"
 	extern int yylineno;
@@ -48,8 +49,9 @@ start:
 	statements			{
 						printf("\nEND\n");
 						
-						St.Process();	
-						//$1->Process();
+						St.Process();
+						system("nasm -felf64 Assembly.asm");	
+						system("gcc Assembly.o");	
 					}
 	;
 block:
