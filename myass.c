@@ -1,4 +1,4 @@
-
 declare int x;
-print x+3;
+x = 1;
+print 3+x;
 

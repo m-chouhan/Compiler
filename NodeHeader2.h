@@ -175,8 +175,8 @@ struct Stack
                         for(int i = size -1;i>=0;--i)
                         {
                               Tuple index = B[i]->sT.FindSymbol(sym);
-                              if( index.first == -1 )  offset += B[i]->sT.size(); //return id of stack from top
-                              else return Tuple(offset+index.first,index.second); 
+                              if( index.first == -1 )  continue;
+                              return Tuple(index.first,size - 1 - i); 
                         }
                         std::string str("Undeclared variable:");
                         str += sym;

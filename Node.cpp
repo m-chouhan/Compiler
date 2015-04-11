@@ -25,21 +25,25 @@ std::string StrType(int type)
 
 void SymbolTable::Push()
 {
-	  out<<"mov		rbx,0\n";
-      for(Str_to_Int::iterator it = Table.begin();it != Table.end();it++)
-      {
-            out<<"push		rbx\n";//key
-            //value
-      }
+	  out<<"push		RBP\n"	
+		 <<"mov		RBP,RSP\n"
+		 <<"sub		RSP,"<<Table.size()*8<<";	Allocating variables\n";	
+      //~ for(Str_to_Int::iterator it = Table.begin();it != Table.end();it++)
+      //~ {
+            //~ out<<"push		rbx\n";//key
+            //~ //value
+      //~ }
 }
 
 void SymbolTable::Pop()
 {
-      for(Str_to_Int::iterator it = Table.begin();it != Table.end();it++)
-      {
-            out<<"pop		rbx\n";//key
-            it->second;//value
-      }
+      //~ for(Str_to_Int::iterator it = Table.begin();it != Table.end();it++)
+      //~ {
+            //~ out<<"pop		rbx\n";//key
+            //~ it->second;//value
+      //~ }
+      out<<"add		RSP,"<<Table.size()*8<<";	Popping Variables\n";
+      out<<"pop		RBP\n";
 }
 
 bool IsSubtype(int t1,int t2)
@@ -78,7 +82,7 @@ int ConstantNode::Process()
 int SymbolNode::Process()
 {
       RegIndex++;
-      out<<"mov		rbx, [RSP+"<<pos*8<<"]	;"<<StrType(Return_Type)<<"\n";
+      out<<"mov		rbx, [RBP-"<<pos*8<<"]	;"<<StrType(Return_Type)<<"\n";
       return RegIndex;      
 }
 
@@ -112,9 +116,9 @@ int OperationNode::Process()
                               int L1 = ++LableIndex;
                               int L2 = ++LableIndex;
                               
-                              out<<"BEQZ R"<<reg<<" , "<<"ELSE"<<L1<<"\n";
+                              out<<"jz ELSE"<<L1<<"\n";
                               right->left->Process();
-                              out<<"JUMP IF"<<L2<<"\n";
+                              out<<"jmp IF"<<L2<<"\n";
                               out<<"ELSE"<<L1<<":\n";                              
                               right->right->Process();
                               out<<"IF"<<L2<<": \n";
@@ -140,7 +144,7 @@ int OperationNode::Process()
                               Return_Type = TypeCheck(left->Return_Type,right->Return_Type);                              
                               RegIndex++;
                               out<<"add		rbx,[RSP]	;\n";
-                              out<<"add		RSP,8		;\n";
+                              out<<"add		RSP,8		; Popping Stack\n";
                               return RegIndex;
                         }
             case '-':
@@ -154,7 +158,7 @@ int OperationNode::Process()
                               Return_Type = TypeCheck(left->Return_Type,right->Return_Type);                              
                               RegIndex++;
                               out<<"sub		rbx,[RSP]	;\n";
-                              out<<"add		RSP,8		;\n";
+                              out<<"add		RSP,8		; Popping Stack\n";
                               return RegIndex;
                         }
             case '*':
@@ -235,8 +239,8 @@ int OperationNode::Process()
                                     yywarning(str.c_str());
                               }
                               int p = sN->pos;
-                              out<<"STORE R"<<reg1<<StrType(right->Return_Type)
-                              <<" , mem["<<sN->symbol<<" , "<<p<<","<<StrType(left->Return_Type)<<"] ;\n";
+                              out<<"mov		[RBP-"<<p*8<<"],rbx;	"<<StrType(right->Return_Type)
+                              <<" , ["<<sN->symbol<<" , "<<p<<","<<StrType(left->Return_Type)<<"] ;\n";
                               return reg1;                              
                         }     
             case EQ:
