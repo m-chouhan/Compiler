@@ -92,8 +92,19 @@ int OperationNode::Process()
 							out <<"mov 		rsi,rbx\n"
 								<<"mov		rdi,format\n"
 								<<"xor		rbx,rbx\n"
-								<<"call		printf\n";
+								<<"call		printf\n\n";
 							return 0;	
+						}
+			case IN:
+						{
+							assert(right->type == Symbol);
+							SymbolNode *sN = dynamic_cast<SymbolNode *> (right);
+							out	<<"mov		rsi,RBP\n"
+								<<"sub		rsi,"<<sN->pos*8<<"\n"
+								<<"mov	 	rdi,scanstring;	parameters\n"
+								<<"mov		al,0\n"
+								<<"call		scanf\n\n";
+							return 0;   
 						}
             case IF:
                         if( right->type == Block )
@@ -103,7 +114,7 @@ int OperationNode::Process()
                               out<<"cmp		rbx,0\n"
 								<<"jz ELSE"<<L<<"\n";
                               right->Process();
-                              out<<"ELSE"<<L<<":\n";
+                              out<<"ELSE"<<L<<":\n\n";
                               return 0;
                         }
                         else  //right is an else block
@@ -117,7 +128,7 @@ int OperationNode::Process()
                               out<<"jmp IF"<<L1<<"\n";
                               out<<"ELSE"<<L1<<":\n";                              
                               right->right->Process();
-                              out<<"IF"<<L1<<": \n";
+                              out<<"IF"<<L1<<": \n\n";
                               return 0;
                         }
             case WHILE:
@@ -131,7 +142,7 @@ int OperationNode::Process()
 							  int reg1 = right->Process(); //This is block
                               out<<"jmp LOOP"<<L<<"\n";
                               
-                              out<<"EXIT_LOOP"<<L<<":\n";
+                              out<<"EXIT_LOOP"<<L<<":\n\n";
                               return 0;
                         }
             case '+':
@@ -165,23 +176,29 @@ int OperationNode::Process()
             case '*':
                         {
                               int reg1 = right->Process();
+                              
+                              out<<"push\t\trbx\n";
+                              
                               int reg2 = left->Process();
-                              Return_Type = TypeCheck(left->Return_Type,right->Return_Type);
+                              
+                              Return_Type = TypeCheck(left->Return_Type,right->Return_Type);                              
                               RegIndex++;
-                              out<<"MUL R"<<RegIndex<<StrType(Return_Type)
-                                    <<" , R"<<reg1<<StrType(right->Return_Type)
-                                    <<" , R"<<reg2<<StrType(left->Return_Type)<<" ;\n";
+                              out<<"mul		rbx,[RSP]	;\n";
+                              out<<"add		RSP,8		; Popping Stack\n";
                               return RegIndex;
                         }
             case '/':
                         {
                               int reg1 = right->Process();
+                              
+                              out<<"push\t\trbx\n";
+                              
                               int reg2 = left->Process();
-                              Return_Type = TypeCheck(left->Return_Type,right->Return_Type);
+                              
+                              Return_Type = TypeCheck(left->Return_Type,right->Return_Type);                              
                               RegIndex++;
-                              out<<"DIV R"<<RegIndex<<StrType(Return_Type)
-                                    <<" , R"<<reg1<<StrType(right->Return_Type)
-                                    <<" , R"<<reg2<<StrType(left->Return_Type)<<" ;\n";
+                              out<<"div		rbx,[RSP]	;\n";
+                              out<<"add		RSP,8		; Popping Stack\n";
                               return RegIndex;
                         }
             case '>':

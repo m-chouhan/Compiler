@@ -1,6 +1,7 @@
 declare int x,y;
 x = 10;
-print 3+x;
+in x;
+print x;
 while(x)
 {
 	x = x - 2;

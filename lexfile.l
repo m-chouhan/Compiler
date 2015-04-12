@@ -28,6 +28,8 @@ alphanum [a-zA-Z]+[a-zA-Z0-9]+
 "declare" return DECLARE;
 
 "print"	  return PRINT;
+
+"in"	return IN;
 	
 "int"	return KEY_INT;
 	

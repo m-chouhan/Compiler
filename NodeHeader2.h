@@ -160,13 +160,16 @@ struct Stack
 				  void Process()
 				  {
 						out<<"        global  main\n"
-						   <<"\textern  printf\n"
+						   <<"	extern  printf\n"
+						   <<"	extern	scanf\n"
 						   <<"        section .text\n"
 						   <<"main:\npush rbx\n";
 						B[0]->Process();
 						out<<"pop rbx\nret\n"
 						   <<"format:\n"
-						   <<"        db \"%d\", 10 , 0\n";
+						   <<"        db \"%d\", 10 , 0\n"
+						   <<"scanstring:\n"
+						   <<"        db \"%d\",0\n";
 						out.close();
 				  }
                   Tuple FindSymbol(char *sym)

@@ -12,10 +12,11 @@
 #define WHILE 268
 #define DECLARE 269
 #define PRINT 270
-#define EQ 271
-#define NEQ 272
-#define LEQ 273
-#define GEQ 274
+#define IN 271
+#define EQ 272
+#define NEQ 273
+#define LEQ 274
+#define GEQ 275
 #ifdef YYSTYPE
 #undef  YYSTYPE_IS_DECLARED
 #define YYSTYPE_IS_DECLARED 1

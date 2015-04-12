@@ -31,7 +31,7 @@
 %token <ivalue> KEY_INT KEY_DOUBLE KEY_BYTE OBJECT
 %token <symbol> ALPHA
 %token IF ELSE WHILE
-%token DECLARE	PRINT
+%token DECLARE	PRINT IN
 %token EQ NEQ LEQ GEQ
 
 %type <nptr> expr statement statements objlist
@@ -117,6 +117,11 @@ statement:
 		|PRINT expr ';'		{
 						$$ = Create(0,$2,PRINT);
 						St.Add($$,yylineno);
+					}
+		|IN ALPHA ';'		{
+						Tuple pos = St.FindSymbol($2);
+						Node *ptr = Create($2,pos);
+						St.Add(Create(0,ptr,IN),yylineno);	
 					}
 		;
 expr:
